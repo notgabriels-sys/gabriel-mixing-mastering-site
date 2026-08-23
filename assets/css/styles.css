@@ -221,6 +221,8 @@ button { font: inherit; }
   background: var(--bg-sunken);
 }
 
+.hero--compact .hero__inner { padding-bottom: 68px; }
+
 /* Faint technical grid — structure, not decoration. */
 .hero__grid {
   position: absolute;
@@ -458,6 +460,31 @@ button { font: inherit; }
 .prep-card p {
   margin: 0;
   color: var(--fg-muted);
+}
+
+.brief-template {
+  max-width: 760px;
+}
+
+.brief-template p {
+  margin: 0 0 16px;
+  color: var(--fg-muted);
+}
+
+.brief-template pre {
+  margin: 0;
+  padding: 22px;
+  overflow-x: auto;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  color: var(--fg);
+  white-space: pre-wrap;
+}
+
+.brief-template code {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.7;
 }
 
 /* --------------------------------------------------------------------------
@@ -895,7 +922,7 @@ button { font: inherit; }
   .nav a:last-child { border-bottom: none; }
 
   .nav-open .nav {
-    max-height: 380px;
+    max-height: 440px;
     visibility: visible;
     pointer-events: auto;
   }

@@ -11,7 +11,12 @@
 (function () {
   'use strict';
 
-  const cfg = window.SITE_CONFIG;
+  const cfg = window.SITE_CONFIG || {
+    email: '',
+    social: [],
+    checkout: { enabled: false, enquiryFallback: true },
+    currencySymbol: '€'
+  };
   const services = window.SERVICES || [];
 
   /* ---------------------------------------------------------------------
@@ -210,6 +215,7 @@
   let currentFilter = null;
 
   function render(filter) {
+    if (!grid) return 0;
     grid.innerHTML = '';
     const visible = services.filter(function (s) {
       return filter === 'all' || s.category === filter;
@@ -247,7 +253,7 @@
     b.addEventListener('click', function () { setFilter(b.dataset.filter); });
   });
 
-  setFilter('all');
+  if (grid) setFilter('all');
 
   /* ---------------------------------------------------------------------
    * Shareable service links
@@ -267,6 +273,7 @@
 
   function focusService(id) {
     if (!id) return false;
+    if (!grid) return false;
     const service = services.filter(function (s) { return s.id === id; })[0];
     if (!service) return false;
 
@@ -388,9 +395,9 @@
     console.info('[site] SITE_CONFIG.email is still the placeholder — Enquire buttons cannot open email.');
   }
   const bookable = services.filter(function (s) {
-    return s.needsQuote === true || window.Checkout.status(s).enabled;
+    return s.needsQuote === true || (window.Checkout && window.Checkout.status(s).enabled);
   });
-  if (!bookable.length) {
+  if (services.length && !bookable.length) {
     console.info(
       '[site] Nothing is bookable. Each service needs a checkout URL ' +
       '(checkout.stripeLink or checkout.gumroadUrl), or needsQuote: true.'
