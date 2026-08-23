@@ -423,6 +423,44 @@ button { font: inherit; }
 .contact-line { margin-top: 22px; }
 
 /* --------------------------------------------------------------------------
+ * Project prep
+ * ------------------------------------------------------------------------*/
+
+.prep-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.prep-card {
+  padding: 24px;
+  background: var(--bg-raised);
+}
+
+.prep-card--wide { grid-column: 1 / -1; }
+
+.prep-card h3 {
+  margin: 0 0 14px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.prep-card ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--fg-muted);
+}
+
+.prep-card li + li { margin-top: 8px; }
+
+.prep-card p {
+  margin: 0;
+  color: var(--fg-muted);
+}
+
+/* --------------------------------------------------------------------------
  * FAQ
  * Native details/summary keeps disclosure keyboard and screen-reader support
  * without a JavaScript accordion or hidden-focus edge cases.
@@ -829,6 +867,8 @@ button { font: inherit; }
   .section--split { grid-template-columns: 1fr; gap: 24px; }
   .hero__inner { padding: 72px var(--gutter) 60px; }
   .hero__meta { gap: 28px; }
+  .prep-grid { grid-template-columns: 1fr; }
+  .prep-card--wide { grid-column: auto; }
 }
 
 @media (max-width: 680px) {
@@ -855,7 +895,7 @@ button { font: inherit; }
   .nav a:last-child { border-bottom: none; }
 
   .nav-open .nav {
-    max-height: 280px;
+    max-height: 380px;
     visibility: visible;
     pointer-events: auto;
   }
