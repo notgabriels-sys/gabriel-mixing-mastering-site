@@ -1,0 +1,31 @@
+# ============================================================================
+# robots.txt
+# ============================================================================
+#
+# CURRENTLY BLOCKING ALL CRAWLERS. This is deliberate.
+#
+# Rates and service copy exist, and selected services have verified PayPal
+# checkout links. Indexing remains blocked until the legal pages are complete,
+# every visible booking flow has been smoke-tested, and Gabriel chooses the
+# final production domain.
+#
+# ---------------------------------------------------------------------------
+# TO GO LIVE
+# ---------------------------------------------------------------------------
+# Once the launch gates in docs/deploy-checklist.md are complete, delete the
+# Disallow block, uncomment Allow, remove the noindex meta tags from
+# index.html/impressum.html/privacy.html, and add the real sitemap URL.
+#
+# Note that robots.txt is a request, not a wall — well-behaved crawlers respect
+# it, but it does not make a site private. Use access control at the host when
+# a preview must be genuinely private.
+# ============================================================================
+
+User-agent: *
+Disallow: /
+
+# --- Uncomment everything below at launch, and delete the Disallow above. ---
+# User-agent: *
+# Allow: /
+#
+# Sitemap: https://yourdomain.com/sitemap.xml
