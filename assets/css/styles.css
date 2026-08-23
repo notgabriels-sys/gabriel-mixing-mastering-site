@@ -488,6 +488,75 @@ button { font: inherit; }
 }
 
 /* --------------------------------------------------------------------------
+ * Quick links page
+ * ------------------------------------------------------------------------*/
+
+.link-stack {
+  display: grid;
+  gap: 12px;
+  max-width: 760px;
+}
+
+.link-card {
+  display: grid;
+  gap: 6px;
+  padding: 20px;
+  border: 1px solid var(--line-strong);
+  background: var(--bg-raised);
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.link-card:hover {
+  border-color: var(--accent);
+  background: #121216;
+  color: var(--fg);
+}
+
+.link-card--primary {
+  border-color: var(--accent);
+}
+
+.link-card span {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.link-card small {
+  color: var(--fg-muted);
+  font-size: 14px;
+}
+
+.mini-service-list {
+  display: grid;
+  gap: 1px;
+  max-width: 760px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.mini-service-list a {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 16px 18px;
+  background: var(--bg-raised);
+  color: var(--fg);
+}
+
+.mini-service-list a:hover {
+  color: var(--accent);
+}
+
+.mini-service-list strong {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
  * FAQ
  * Native details/summary keeps disclosure keyboard and screen-reader support
  * without a JavaScript accordion or hidden-focus edge cases.
@@ -922,7 +991,7 @@ button { font: inherit; }
   .nav a:last-child { border-bottom: none; }
 
   .nav-open .nav {
-    max-height: 440px;
+    max-height: 520px;
     visibility: visible;
     pointer-events: auto;
   }
