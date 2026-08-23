@@ -46,6 +46,9 @@
  *                        that opens email instead of checkout. Use for album
  *                        work, unusual formats, anything you'd want to hear
  *                        before pricing.
+ *  enquiryOnly  boolean  true = the fixed price stays visible, but the action
+ *                        remains an email enquiry because the service needs
+ *                        file/scope confirmation before direct checkout.
  *  available    boolean  false greys the card out and shows "Currently full".
  *                        Use it when the books are closed rather than deleting
  *                        the service — keeps the page honest without losing
@@ -142,6 +145,7 @@ const SERVICES = [
       'Track order and spacing on request',
     ],
     needsQuote: false,
+    enquiryOnly: true,
     available: true, // open for enquiry; payment waits for its own verified link
     checkout: {
       stripeLink: null,
@@ -171,6 +175,7 @@ const SERVICES = [
       'Short note on what was changed',
     ],
     needsQuote: false,
+    enquiryOnly: true,
     available: true, // open for enquiry; payment waits for its own verified link
     checkout: {
       stripeLink: null,
@@ -199,6 +204,7 @@ const SERVICES = [
       'Notes for the cutting engineer',
     ],
     needsQuote: false,
+    enquiryOnly: true,
     available: true, // open for enquiry; payment waits for its own verified link
     checkout: {
       stripeLink: null,
@@ -314,6 +320,7 @@ const SERVICES = [
       'Updated mixdown and versions',
     ],
     needsQuote: false,
+    enquiryOnly: true,
     available: true, // open for enquiry; payment waits for its own verified link
     checkout: {
       stripeLink: null,
@@ -342,6 +349,7 @@ const SERVICES = [
       'Follow-up questions by email',
     ],
     needsQuote: false,
+    enquiryOnly: true,
     available: true, // open for enquiry; payment waits for its own verified link
     checkout: {
       stripeLink: null,
