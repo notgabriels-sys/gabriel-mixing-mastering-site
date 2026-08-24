@@ -652,11 +652,17 @@ button { font: inherit; }
   text-underline-offset: 3px;
 }
 
+.one-sheet code {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 @media print {
   .banner,
   .site-header,
-  .site-footer,
   .one-sheet__actions { display: none; }
+
+  .site-footer { display: none !important; }
 
   body {
     background: #fff;
@@ -673,6 +679,22 @@ button { font: inherit; }
   .one-sheet__list,
   .rate-list dd {
     color: #000;
+  }
+
+  .eyebrow,
+  .one-sheet__block h2,
+  .one-sheet a,
+  .one-sheet code {
+    color: #000;
+  }
+
+  .one-sheet__list li::marker {
+    color: #000;
+  }
+
+  .one-sheet__block {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 }
 
@@ -1087,7 +1109,7 @@ button { font: inherit; }
   .prep-card--wide { grid-column: auto; }
 }
 
-@media (max-width: 680px) {
+@media (max-width: 900px) {
   .nav-toggle { display: flex; }
 
   .nav {
@@ -1111,9 +1133,17 @@ button { font: inherit; }
   .nav a:last-child { border-bottom: none; }
 
   .nav-open .nav {
-    max-height: 520px;
+    max-height: calc(100dvh - 76px);
+    overflow-y: auto;
     visibility: visible;
     pointer-events: auto;
+  }
+}
+
+@media (max-width: 680px) {
+  .footer-links {
+    flex-wrap: wrap;
+    gap: 0 18px;
   }
 
   .section { padding: 60px var(--gutter); }
