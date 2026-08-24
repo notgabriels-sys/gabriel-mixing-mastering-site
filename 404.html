@@ -6,12 +6,12 @@
   <title>Not found — Gabriel Garcia Alonso</title>
   <meta name="robots" content="noindex" />
   <link rel="icon" href="public/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260824f" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260824h" />
 </head>
 <body>
   <!--
-    Netlify, Vercel, Cloudflare Pages and GitHub Pages all serve /404.html
-    automatically for unknown paths. No configuration needed.
+    Cloudflare Workers Static Assets serves /404.html for unknown paths because
+    wrangler.jsonc sets not_found_handling to "404-page".
 
     Unlike every other page here, this one uses paths absolute from the site
     root (/assets/…). A 404 is served for arbitrary URLs — /a/b/c/typo — and

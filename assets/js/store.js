@@ -346,7 +346,7 @@
   const toggle = document.getElementById('nav-toggle');
   const nav = document.getElementById('main-nav');
   if (toggle && nav) {
-    const mobileNav = window.matchMedia('(max-width: 680px)');
+    const mobileNav = window.matchMedia('(max-width: 900px)');
 
     function setNavOpen(open, returnFocus) {
       const mobile = mobileNav.matches;
@@ -358,7 +358,12 @@
       // `inert` prevents the collapsed links entering keyboard focus order;
       // CSS visibility below is the fallback for older browsers.
       nav.toggleAttribute('inert', mobile && !nextOpen);
-      if (returnFocus) toggle.focus();
+      if (nextOpen) {
+        const firstLink = nav.querySelector('a');
+        if (firstLink) firstLink.focus();
+      } else if (returnFocus) {
+        toggle.focus();
+      }
     }
 
     toggle.addEventListener('click', function () {
