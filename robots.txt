@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://notgabriels-sys.github.io/gabriel-mixing-mastering-site/sitemap.xml
+Sitemap: https://audio.gabs-utilities.com/sitemap.xml
