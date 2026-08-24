@@ -3,7 +3,15 @@ const SITE_CONFIG = {
   name: 'Gabriel Garcia Alonso',
   location: 'Berlin',
   email: 'notgabriels@gmail.com',
-  social: [],
+  // Shown as buttons in the Contact section. Delete any you don't want,
+  // add more freely. `url: null` hides the entry.
+  social: [
+    {
+      label: 'Book mastering via AirGigs',
+      url: 'https://www.airgigs.com/mastering-engineers-for-hire/109633/I-will-master-your-electronic-music-for-release',
+    },
+  ],
+
   currency: 'EUR',
   currencySymbol: '€',
   checkout: {

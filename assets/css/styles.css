@@ -361,6 +361,11 @@ button { font: inherit; }
   border-bottom: 1px solid var(--line);
 }
 
+.section--compact {
+  padding-top: 48px;
+  padding-bottom: 48px;
+}
+
 .section__head {
   display: flex;
   flex-wrap: wrap;
