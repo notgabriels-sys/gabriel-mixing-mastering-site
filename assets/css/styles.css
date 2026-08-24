@@ -427,7 +427,12 @@ button { font: inherit; }
 
 .links li a { color: var(--fg); }
 
-.contact-line { margin-top: 22px; }
+.contact-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
 
 /* --------------------------------------------------------------------------
  * Project prep
