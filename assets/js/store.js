@@ -346,7 +346,7 @@
   const toggle = document.getElementById('nav-toggle');
   const nav = document.getElementById('main-nav');
   if (toggle && nav) {
-    const mobileNav = window.matchMedia('(max-width: 900px)');
+    const mobileNav = window.matchMedia('(max-width: 1080px)');
 
     function setNavOpen(open, returnFocus) {
       const mobile = mobileNav.matches;

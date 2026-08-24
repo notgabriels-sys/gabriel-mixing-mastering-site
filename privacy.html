@@ -4,8 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Privacy — Gabriel Garcia Alonso</title>
+  <meta name="description" content="Privacy policy for Gabriel Garcia Alonso's mixing and mastering service." />
+  <link rel="canonical" href="https://audio.gabs-utilities.com/privacy.html" />
   <link rel="icon" href="public/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260824h" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260824i" />
 </head>
 <body>
 <!-- ============================================================================
@@ -25,10 +27,14 @@
       <span class="logo__mark" aria-hidden="true"></span>
       <span class="logo__text">GABRIEL GARCIA ALONSO</span>
     </a>
-    <nav class="nav" aria-label="Main">
+    <nav class="nav" id="main-nav" aria-label="Main">
       <a href="index.html#services">Services</a>
       <a href="impressum.html">Impressum</a>
     </nav>
+    <button class="nav-toggle" id="nav-toggle" type="button"
+      aria-label="Open navigation" aria-controls="main-nav" aria-expanded="false">
+      <span></span><span></span>
+    </button>
   </header>
 
   <main class="section legal">
@@ -60,10 +66,15 @@
 
     <h2>Payments</h2>
     <p>
-      Payments are not processed on this site. Clicking a Book button sends you
-      to PayPal (Europe) S.à r.l. et Cie, S.C.A., who handle the
+      Payments are not processed on this site. Clicking a direct Book button
+      sends you to PayPal (Europe) S.à r.l. et Cie, S.C.A., who handle the
       transaction on their own systems and under their own privacy policy:
       <a href="https://www.paypal.com/de/legalhub/paypal/privacy-full?locale.x=de_DE">PayPal&rsquo;s privacy statement</a>.
+    </p>
+    <p>
+      If you choose the marketplace booking route, AirGigs handles the project
+      booking, payment, messages and file exchange inside its own service:
+      <a href="https://www.airgigs.com/privacy">AirGigs privacy policy</a>.
     </p>
     <p>
       Your card details are never seen by, transmitted through, or stored on
@@ -96,5 +107,6 @@
 
     <p class="legal__foot"><a href="index.html#services">← Back to services</a></p>
   </main>
+  <script src="assets/js/store.js?v=20260824h" defer></script>
 </body>
 </html>

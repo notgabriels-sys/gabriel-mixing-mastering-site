@@ -1109,7 +1109,7 @@ button { font: inherit; }
   .prep-card--wide { grid-column: auto; }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1080px) {
   .nav-toggle { display: flex; }
 
   .nav {

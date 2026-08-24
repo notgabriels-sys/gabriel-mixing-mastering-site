@@ -5,6 +5,12 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
 
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/public/*
+  Cache-Control: public, max-age=86400
+
 # Preview URLs are for release verification, not search results.
 https://:worker.:subdomain.workers.dev/*
   X-Robots-Tag: noindex
