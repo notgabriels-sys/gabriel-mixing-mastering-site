@@ -1627,10 +1627,11 @@ button { font: inherit; }
 }
 
 .featured-service__price {
-  margin: 0;
-  color: var(--fg);
+  margin: 18px 0 0;
+  color: var(--accent);
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
