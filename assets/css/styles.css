@@ -16,6 +16,8 @@
    * background paint. Keep accent coverage intentionally sparse. */
   --bg-tint:     #111214;
   --bg-tint-deep:#090a0b;
+  --bg-lower:    #070809;
+  --bg-lower-raised: #0b0c0e;
 
   /* Ink.
    * Every value here clears WCAG AA (4.5:1) against the darkest background it
@@ -38,6 +40,7 @@
 
   /* Accent — a single cold signal colour. Change this one value to reskin. */
   --accent:      #b8c475;
+  --accent-neon: #d8ff2f;
   --accent-ink:  #0a0b0c;
   --accent-soft: #191a1d;
 
@@ -454,7 +457,7 @@ button { font: inherit; }
  * enough to keep the service journey editorial rather than turning into a
  * loud comparison table. */
 .rate-section {
-  background: var(--bg-tint);
+  background: var(--bg-lower);
   border-top: 1px solid var(--line-tint);
 }
 
@@ -478,7 +481,7 @@ button { font: inherit; }
 
 .rate-quickview__item {
   min-width: 0;
-  background: var(--bg-tint);
+  background: var(--bg-lower-raised);
 }
 
 .rate-quickview__item > a {
@@ -1292,6 +1295,19 @@ button { font: inherit; }
   background: var(--bg-tint-deep);
 }
 
+.home #main-content,
+#links {
+  background: var(--bg-lower);
+}
+
+/* Below the opening atmosphere, let the signal become brighter while keeping
+ * its footprint small: rates, markers and actions only, never broad paint. */
+.home #main-content > .section,
+#links > .section {
+  --accent: var(--accent-neon);
+  background: var(--bg-lower);
+}
+
 .home .hero__inner {
   padding-top: clamp(56px, 4vw, 64px);
   padding-bottom: clamp(40px, 3vw, 48px);
@@ -1520,7 +1536,7 @@ button { font: inherit; }
 
 .listen-panel__foot a:hover { color: var(--accent); }
 
-.service-overview { padding-top: 72px; }
+.service-overview { padding-top: 72px; background: var(--bg-lower); }
 
 .service-overview__layout {
   display: grid;
@@ -1661,6 +1677,7 @@ button { font: inherit; }
   padding: 16px 18px;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
+  background: var(--bg-lower);
 }
 
 .quick-enquiry:hover { color: var(--fg); }
@@ -1691,6 +1708,7 @@ button { font: inherit; }
 .catalog-disclosure {
   margin-top: 44px;
   border-top: 1px solid var(--line);
+  background: var(--bg-lower);
 }
 
 .catalog-disclosure > summary {
@@ -1752,6 +1770,7 @@ button { font: inherit; }
   margin-top: 88px;
   padding-top: 72px;
   border-top: 1px solid var(--line);
+  background: var(--bg-lower);
 }
 
 .catalog-disclosure .catalog {
