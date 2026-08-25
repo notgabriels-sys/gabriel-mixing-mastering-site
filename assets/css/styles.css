@@ -1,7 +1,7 @@
 /* ============================================================================
- * styles.css — graphite / violet / industrial
+ * styles.css — graphite / soft violet / industrial
  * ============================================================================
- * Design intent: graphite ground, a restrained violet-neon signal, compact
+ * Design intent: darker graphite ground, a low-chroma violet signal, compact
  * metadata against a familiar sans for the words people need to read, and
  * hairline borders instead of heavy decoration. Colour marks hierarchy and
  * interaction; the grey field keeps the page calm. Everything is driven by the
@@ -10,43 +10,44 @@
 
 :root {
   /* Ground */
-  --bg:          #0b0b10;
-  --bg-raised:   #15141b;
-  --bg-sunken:   #08080c;
+  --bg:          #09090e;
+  --bg-raised:   #111118;
+  --bg-sunken:   #06060a;
   /* Graphite carries the large fields; violet is a signal, not a background
    * paint. Keep accent coverage intentionally sparse. */
-  --bg-tint:     #12111a;
-  --bg-tint-deep:#09090f;
-  --bg-lower:    #08080d;
-  --bg-lower-raised: #0d0d14;
+  --bg-tint:     #0e0e15;
+  --bg-tint-deep:#07070c;
+  --bg-lower:    #07070b;
+  --bg-lower-raised: #0b0b12;
 
   /* Ink.
    * Every value here clears WCAG AA (4.5:1) against the darkest background it
-   * is used on (--bg-raised, #0f0f11), measured rather than eyeballed:
-   *   --fg        16.2:1
-   *   --fg-muted   5.7:1
-   *   --fg-faint   4.8:1
+   * is used on (--bg-raised, #111118), measured rather than eyeballed:
+   *   --fg        16.1:1
+   *   --fg-muted   7.4:1
+   *   --fg-faint   5.1:1
    * --fg-faint used to be #5a5a62, which measured 2.8:1 and failed — it
    * carries product specs and licence terms, so it has to be readable.
    * If you darken these, re-measure. Small mono type on near-black is exactly
    * where contrast quietly stops working. */
-  --fg:          #eeeaf5;
-  --fg-muted:    #aaa5b5;
-  --fg-faint:    #8d8799;
+  --fg:          #eeedf2;
+  --fg-muted:    #a3a1aa;
+  --fg-faint:    #85848d;
 
   /* Lines */
-  --line:        #272431;
-  --line-strong: #40384d;
-  --line-tint:   #554766;
+  --line:        #24242b;
+  --line-strong: #35353f;
+  --line-tint:   #46464f;
 
-  /* Accent — a restrained violet-neon signal, used for action and focus. */
-  --accent:      #bf91ff;
-  --accent-neon: #d8baff;
-  --accent-ink:  #100b18;
-  --accent-soft: #332545;
+  /* Accent — approximately 17% lower chroma than the previous release;
+   * violet remains reserved for action and focus rather than surface paint. */
+  --accent:      #c19af6;
+  --accent-neon: #dac0f9;
+  --accent-ink:  #0d0b12;
+  --accent-soft: #322733;
 
   /* Secondary signal — reserved for small technical/readout details. */
-  --signal:      #8acdf1;
+  --signal:      #92c9e9;
 
   /* Type */
   /* Deliberately explicit: key copy must never fall back to a serif or
