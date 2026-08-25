@@ -1,7 +1,7 @@
 /* ============================================================================
- * styles.css — graphite / steel blue / industrial
+ * styles.css — neutral graphite / steel blue / industrial
  * ============================================================================
- * Design intent: darker blue-black graphite ground, a muted steel-blue signal, compact
+ * Design intent: neutral dark graphite ground, a muted steel-blue signal, compact
  * metadata against a familiar sans for the words people need to read, and
  * hairline borders instead of heavy decoration. Colour marks hierarchy and
  * interaction; the grey field keeps the page calm. Everything is driven by the
@@ -10,41 +10,41 @@
 
 :root {
   /* Ground */
-  --bg:          #080b12;
-  --bg-raised:   #101722;
-  --bg-sunken:   #05080e;
-  /* Graphite carries the large fields; steel blue is a signal, not a background
-   * paint. Keep accent coverage intentionally sparse. */
-  --bg-tint:     #0c121b;
-  --bg-tint-deep:#060a11;
-  --bg-lower:    #06090f;
-  --bg-lower-raised: #0a1018;
+  --bg:          #090a0d;
+  --bg-raised:   #121417;
+  --bg-sunken:   #060709;
+  /* Neutral graphite carries the large fields; steel blue is a signal, not a
+   * background paint. Keep total colour density at or below 22%. */
+  --bg-tint:     #101316;
+  --bg-tint-deep:#080a0d;
+  --bg-lower:    #07090c;
+  --bg-lower-raised: #0c0f13;
 
   /* Ink.
    * Every value here clears WCAG AA (4.5:1) against the darkest background it
-   * is used on (--bg-raised, #101722), measured rather than eyeballed:
-   *   --fg        15.7:1
-   *   --fg-muted   7.4:1
-   *   --fg-faint   5.0:1
+   * is used on (--bg-raised, #121417), measured rather than eyeballed:
+   *   --fg        15.4:1
+   *   --fg-muted   7.5:1
+   *   --fg-faint   5.3:1
    * --fg-faint used to be #5a5a62, which measured 2.8:1 and failed — it
    * carries product specs and licence terms, so it has to be readable.
    * If you darken these, re-measure. Small mono type on near-black is exactly
    * where contrast quietly stops working. */
-  --fg:          #edf0f5;
-  --fg-muted:    #a3adb9;
-  --fg-faint:    #858f9b;
+  --fg:          #eef0f3;
+  --fg-muted:    #a5aab0;
+  --fg-faint:    #878d94;
 
   /* Lines */
-  --line:        #222a35;
-  --line-strong: #343f4d;
-  --line-tint:   #455464;
+  --line:        #25282d;
+  --line-strong: #383d43;
+  --line-tint:   #474d54;
 
   /* Accent — a muted steel-blue signal, reserved for action and focus rather
    * than surface paint. */
   --accent:      #91b1cc;
   --accent-neon: #b5cadd;
   --accent-ink:  #081018;
-  --accent-soft: #203342;
+  --accent-soft: #26333c;
 
   /* Singular signature mark — the homepage's human-service eyebrow keeps a
    * small trace of the former violet identity; no other surface uses it. */
@@ -988,7 +988,7 @@ button { font: inherit; }
   transition: background 0.15s;
 }
 
-.card:hover { background: #1b1822; }
+.card:hover { background: var(--bg-tint); }
 
 .card--unavailable { opacity: 0.6; }
 
