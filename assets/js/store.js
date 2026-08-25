@@ -11,12 +11,9 @@
 (function () {
   'use strict';
 
-  document.documentElement.classList.remove('no-js');
-
   const cfg = window.SITE_CONFIG || {
     email: '',
     social: [],
-    pricing: { public: false, quoteLabel: 'Written quote after listening' },
     checkout: { enabled: false, enquiryFallback: true },
     currencySymbol: '€'
   };
@@ -41,87 +38,7 @@
     return symbol + (n % 1 === 0 ? String(n) : n.toFixed(2));
   }
 
-  function publicPricingEnabled() {
-    return !!(cfg.pricing && cfg.pricing.public === true);
-  }
-
-  function quoteLabel() {
-    return (cfg.pricing && cfg.pricing.quoteLabel) || 'Written quote after listening';
-  }
-
-  function displayPrice(service) {
-    if (
-      !publicPricingEnabled() ||
-      service.needsQuote === true ||
-      !Number.isFinite(service.price) ||
-      service.price <= 0
-    ) return quoteLabel();
-    return formatPrice(service.price) + (service.priceNote ? ' ' + service.priceNote : '');
-  }
-
   const CATEGORY_LABEL = { mastering: 'Mastering', mixing: 'Mixing' };
-
-  /* The short rate index answers the first practical question without making
-   * visitors navigate the full service catalogue. Keep this list deliberately
-   * small; the detailed menu remains the source of truth for scope. */
-  const QUICK_RATE_IDS = [
-    'mastering-single',
-    'mixing-single',
-    'mixing-mastering-bundle',
-    'mastering-stem',
-  ];
-
-  function rateText(service) {
-    if (
-      !publicPricingEnabled() ||
-      service.needsQuote === true ||
-      !Number.isFinite(service.price) ||
-      service.price <= 0
-    ) return quoteLabel();
-    return formatPrice(service.price) + (service.priceNote ? ' ' + service.priceNote : '');
-  }
-
-  function buildRateItem(service, linkPrefix) {
-    const item = el('li', 'rate-quickview__item');
-    const link = el('a');
-    link.href = (linkPrefix ? linkPrefix + '#' : '#') + service.id;
-    const price = rateText(service);
-
-    const copy = el('span', 'rate-quickview__copy');
-    copy.appendChild(el('span', 'rate-quickview__category', CATEGORY_LABEL[service.category] || service.category));
-    copy.appendChild(el('strong', null, service.title));
-    link.appendChild(copy);
-    link.appendChild(el('span', 'rate-quickview__price', price));
-    link.appendChild(el('span', 'rate-quickview__subtitle', service.subtitle || service.priceNote || ''));
-    item.appendChild(link);
-    return item;
-  }
-
-  function renderRateIndex() {
-    const list = document.getElementById('rate-quickview');
-    if (!list) return;
-    const linkPrefix = list.dataset.linkPrefix || '';
-    list.innerHTML = '';
-    QUICK_RATE_IDS.forEach(function (id) {
-      const service = services.find(function (item) { return item.id === id; });
-      if (service && service.available !== false) list.appendChild(buildRateItem(service, linkPrefix));
-    });
-  }
-
-  function renderRateFrom() {
-    const service = services.find(function (item) { return item.id === 'mastering-single'; });
-    const text = service && publicPricingEnabled() && Number.isFinite(service.price) && service.price > 0
-      ? formatPrice(service.price)
-      : quoteLabel();
-    document.querySelectorAll('[data-rate-from]').forEach(function (node) {
-      node.textContent = text;
-      const parent = node.closest('a');
-      if (parent) parent.setAttribute('aria-label', 'Rates from ' + text + ' per track — view rates');
-    });
-  }
-
-  renderRateIndex();
-  renderRateFrom();
 
   function mailtoHref(subject, body) {
     const address = cfg.email || '';
@@ -132,21 +49,21 @@
   }
 
   function enquiryBody(service) {
+    const rate = service.needsQuote === true
+      ? 'On request'
+      : formatPrice(service.price) + (service.priceNote ? ' ' + service.priceNote : '');
     return [
       'Hi Gabriel,',
       '',
       'I am interested in: ' + service.title,
-      'I understand this is a non-binding enquiry.',
+      'Displayed rate: ' + rate,
       '',
-      'Private listening link:',
-      'What still feels unresolved:',
-      'Release deadline:',
-      'Reference tracks:',
-      '',
-      'Optional context',
       'Artist / project name:',
+      'Rough mix or private link:',
+      'Reference tracks:',
+      'Release deadline:',
       'Number of tracks / stems:',
-      'Release format and required delivery versions:',
+      'Anything specific you want help with:',
       '',
       'Thanks,'
     ].join('\n');
@@ -163,65 +80,6 @@
   }
 
   /* ---------------------------------------------------------------------
-   * Three featured routes — same source data as the full catalogue
-   * ------------------------------------------------------------------- */
-
-  const FEATURED_SERVICE_IDS = [
-    'mastering-single',
-    'mixing-single',
-    'mixing-mastering-bundle'
-  ];
-
-  function buildFeaturedCard(service, index) {
-    const article = el('article', 'featured-service');
-    article.appendChild(el('p', 'featured-service__number', String(index + 1).padStart(2, '0')));
-    article.appendChild(el('h3', null, service.title));
-    article.appendChild(el('p', 'featured-service__desc', service.description));
-
-    const meta = el('div', 'featured-service__meta');
-    meta.setAttribute(
-      'aria-label',
-      'Typical timing: ' + service.turnaround + '. Revision scope: ' + service.revisions
-    );
-    meta.appendChild(el('span', null, service.turnaround));
-    meta.appendChild(el('span', null, service.revisions));
-    article.appendChild(meta);
-
-    /* Keep the practical decision visible at the point where a visitor is
-     * choosing a route. The rate index remains the source of truth, but the
-     * featured cards should never make someone scroll back to compare price. */
-    const featuredPriceText = displayPrice(service);
-    const featuredPrice = el('p', 'featured-service__price', featuredPriceText);
-    featuredPrice.setAttribute('aria-label', 'Starting rate ' + featuredPriceText);
-    article.appendChild(featuredPrice);
-
-    const footer = el('div', 'featured-service__footer featured-service__actions');
-
-    const enquiry = el('a', 'featured-service__enquiry', 'Let me hear this');
-    enquiry.href = mailtoHref(
-      'Non-binding project enquiry — ' + service.title,
-      enquiryBody(service)
-    ) || 'brief.html';
-    enquiry.setAttribute('aria-label', 'Let me hear this — start a non-binding enquiry about ' + service.title);
-    footer.appendChild(enquiry);
-
-    const detail = el('a', 'featured-service__link', 'Full scope');
-    detail.href = '#' + service.id;
-    detail.setAttribute('aria-label', 'Full scope — view detailed scope for ' + service.title);
-    footer.appendChild(detail);
-    article.appendChild(footer);
-    return article;
-  }
-
-  const featuredGrid = document.getElementById('featured-service-grid');
-  if (featuredGrid) {
-    FEATURED_SERVICE_IDS.forEach(function (id, index) {
-      const service = services.find(function (item) { return item.id === id; });
-      if (service) featuredGrid.appendChild(buildFeaturedCard(service, index));
-    });
-  }
-
-  /* ---------------------------------------------------------------------
    * Service card
    * ------------------------------------------------------------------- */
 
@@ -230,6 +88,8 @@
     const status = quoteOnly
       ? { enabled: false, label: '', provider: null, providerLabel: null, reason: null }
       : window.Checkout.status(service);
+
+    const bookable = quoteOnly || status.enabled;
 
     const card = el('article', 'card' + (service.available === false ? ' card--unavailable' : ''));
     card.dataset.category = service.category;
@@ -273,9 +133,9 @@
     const foot = el('div', 'card__foot');
 
     const priceWrap = el('div', 'card__pricing');
-    if (!publicPricingEnabled() || quoteOnly) {
-      priceWrap.appendChild(el('span', 'card__price card__price--quote', quoteLabel()));
-      priceWrap.setAttribute('aria-label', quoteLabel());
+    if (quoteOnly) {
+      priceWrap.appendChild(el('span', 'card__price', 'On request'));
+      priceWrap.setAttribute('aria-label', 'Price on request');
     } else {
       priceWrap.appendChild(el('span', 'card__price', formatPrice(service.price)));
       if (service.priceNote) priceWrap.appendChild(el('span', 'card__price-note', service.priceNote));
@@ -292,23 +152,24 @@
       const closed = el('span', 'card__closed', 'Currently full');
       foot.appendChild(closed);
     } else if (quoteOnly) {
-      /* Individually scoped work starts with a non-binding email enquiry. */
-      const href = mailtoHref('Non-binding quote request — ' + service.title, enquiryBody(service));
-      const a = el('a', 'btn btn--buy', 'Request quote');
+      /* No fixed price — send them to email instead of a checkout. */
+      const href = mailtoHref('Quote request — ' + service.title, enquiryBody(service));
+      const a = el('a', 'btn btn--buy', 'Enquire');
       if (href) {
         a.href = href;
       } else {
         a.href = '#contact';
         a.title = 'Set SITE_CONFIG.email in config.js to open email directly.';
       }
-      a.setAttribute('aria-label', 'Request a quote for ' + service.title);
+      a.setAttribute('aria-label', 'Enquire about ' + service.title);
       foot.appendChild(a);
     } else if (!status.enabled && cfg.checkout && cfg.checkout.enquiryFallback === true) {
-      /* Keep the route useful while public pricing and payment stay disabled. */
-      const href = mailtoHref('Non-binding service enquiry — ' + service.title, enquiryBody(service));
-      const a = el('a', 'btn btn--buy', 'Request quote');
+      /* Keep the confirmed rate visible and open a service-specific email.
+       * This avoids dead controls without inventing or reusing payment URLs. */
+      const href = mailtoHref('Service enquiry — ' + service.title, enquiryBody(service));
+      const a = el('a', 'btn btn--buy', 'Enquire');
       a.href = href || '#contact';
-      a.setAttribute('aria-label', 'Request a quote for ' + service.title);
+      a.setAttribute('aria-label', 'Enquire about ' + service.title);
       if (!href) a.title = 'Set SITE_CONFIG.email in config.js to open email directly.';
       foot.appendChild(a);
     } else {
@@ -418,9 +279,6 @@
 
     if (currentFilter !== 'all' && currentFilter !== service.category) setFilter('all');
 
-    const disclosure = grid.closest('details');
-    if (disclosure && !disclosure.open) disclosure.open = true;
-
     const card = grid.querySelector('[data-id="' + cssEscape(id) + '"]');
     if (!card) return false;
 
@@ -452,7 +310,7 @@
   if (emailBtn) {
     const address = cfg.email || '';
     const unset = !address || address.indexOf('REPLACE_ME') === 0;
-    emailBtn.href = unset ? '#' : mailtoHref('Non-binding project enquiry — mixing / mastering');
+    emailBtn.href = unset ? '#' : mailtoHref('Mixing / mastering enquiry');
     emailBtn.textContent = unset ? 'Email — set address in config.js' : address;
     if (unset) emailBtn.classList.add('is-placeholder');
   }
@@ -500,12 +358,7 @@
       // `inert` prevents the collapsed links entering keyboard focus order;
       // CSS visibility below is the fallback for older browsers.
       nav.toggleAttribute('inert', mobile && !nextOpen);
-      if (nextOpen) {
-        const firstLink = nav.querySelector('a');
-        if (firstLink) firstLink.focus();
-      } else if (returnFocus) {
-        toggle.focus();
-      }
+      if (returnFocus) toggle.focus();
     }
 
     toggle.addEventListener('click', function () {
@@ -514,19 +367,7 @@
 
     nav.querySelectorAll('a').forEach(function (a) {
       a.addEventListener('click', function () {
-        const hash = a.hash;
-        const samePage = hash && a.origin === window.location.origin && a.pathname === window.location.pathname;
         setNavOpen(false);
-        if (samePage && mobileNav.matches) {
-          window.setTimeout(function () {
-            const target = document.querySelector(hash);
-            if (!target) return;
-            if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
-            target.focus({ preventScroll: true });
-          }, 0);
-        } else if (mobileNav.matches) {
-          toggle.focus();
-        }
       });
     });
 
@@ -539,21 +380,51 @@
     if (typeof mobileNav.addEventListener === 'function') {
       mobileNav.addEventListener('change', function () { setNavOpen(false); });
     }
-
-    const header = toggle.closest('.site-header');
-    if (header) {
-      header.addEventListener('focusout', function () {
-        window.setTimeout(function () {
-          if (
-            mobileNav.matches &&
-            toggle.getAttribute('aria-expanded') === 'true' &&
-            !header.contains(document.activeElement)
-          ) setNavOpen(false);
-        }, 0);
-      });
-    }
+    document.body.classList.add('js-ready');
     setNavOpen(false);
   }
+
+  /* ---------------------------------------------------------------------
+   * Progressive motion
+   * -------------------------------------------------------------------
+   * A quiet entrance gives the long page a little cadence without turning it
+   * into a performance. Targets are only hidden after JS and Intersection
+   * Observer are both known to be available; no-JS and reduced-motion users
+   * receive the complete page immediately. */
+
+  function initMotion() {
+    if (prefersReducedMotion() || !('IntersectionObserver' in window)) return;
+
+    const motionTargets = Array.prototype.slice.call(document.querySelectorAll(
+      '.hero__inner > *,' +
+      '.section > .section__head,' +
+      '.section > .section__note,' +
+      '.section > .grid,' +
+      '.section > .steps,' +
+      '.section--split > div,' +
+      '.section--split > .faq'
+    ));
+
+    if (!motionTargets.length) return;
+
+    motionTargets.forEach(function (node, index) {
+      node.classList.add('reveal');
+      node.style.setProperty('--reveal-delay', Math.min(index * 35, 210) + 'ms');
+    });
+    document.body.classList.add('motion-ready');
+
+    const observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -8% 0px' });
+
+    motionTargets.forEach(function (node) { observer.observe(node); });
+  }
+
+  initMotion();
 
   /* ---------------------------------------------------------------------
    * Setup warnings — console only, so they help whoever is configuring the
@@ -566,17 +437,13 @@
   if (!cfg.email || cfg.email.indexOf('REPLACE_ME') === 0) {
     console.info('[site] SITE_CONFIG.email is still the placeholder — Enquire buttons cannot open email.');
   }
-  const reachable = services.filter(function (s) {
-    return s.available !== false && (
-      s.needsQuote === true ||
-      (cfg.checkout && cfg.checkout.enquiryFallback === true) ||
-      (window.Checkout && window.Checkout.status(s).enabled)
-    );
+  const bookable = services.filter(function (s) {
+    return s.needsQuote === true || (window.Checkout && window.Checkout.status(s).enabled);
   });
-  if (services.length && !reachable.length) {
+  if (services.length && !bookable.length) {
     console.info(
-      '[site] No service enquiry route is available. Enable the enquiry ' +
-      'fallback or add a deliberate service route before publishing.'
+      '[site] Nothing is bookable. Each service needs a checkout URL ' +
+      '(checkout.stripeLink or checkout.gumroadUrl), or needsQuote: true.'
     );
   }
 })();
