@@ -12,8 +12,10 @@
   --bg:          #0a0a0b;
   --bg-raised:   #0f0f11;
   --bg-sunken:   #070708;
-  --bg-tint:     #0d110d;
-  --bg-tint-deep:#090d0a;
+  /* Graphite carries the large fields; the yellow-green is a signal, not a
+   * background paint. Keep accent coverage intentionally sparse. */
+  --bg-tint:     #111214;
+  --bg-tint-deep:#090a0b;
 
   /* Ink.
    * Every value here clears WCAG AA (4.5:1) against the darkest background it
@@ -32,12 +34,12 @@
   /* Lines */
   --line:        #1d1d21;
   --line-strong: #2c2c33;
-  --line-tint:   #293225;
+  --line-tint:   #2b2d31;
 
   /* Accent — a single cold signal colour. Change this one value to reskin. */
-  --accent:      #c8ff2e;
-  --accent-ink:  #0a0a0b;
-  --accent-soft: #151d0d;
+  --accent:      #b8c475;
+  --accent-ink:  #0a0b0c;
+  --accent-soft: #191a1d;
 
   /* Type */
   /* Deliberately explicit: key copy must never fall back to a serif or
@@ -367,7 +369,7 @@ button { font: inherit; }
   border-color: var(--accent);
   color: var(--accent-ink);
 }
-.btn--primary:hover { background: #d9ff5e; border-color: #d9ff5e; color: var(--accent-ink); }
+.btn--primary:hover { background: #c7d58b; border-color: #c7d58b; color: var(--accent-ink); }
 
 .btn--ghost { background: transparent; }
 
@@ -470,7 +472,7 @@ button { font: inherit; }
   padding: 0;
   list-style: none;
   background: var(--line-tint);
-  border-top: 2px solid var(--accent);
+  border-top: 1px solid var(--accent);
   border-bottom: 1px solid var(--line-strong);
 }
 
