@@ -190,8 +190,9 @@
     /* Keep the practical decision visible at the point where a visitor is
      * choosing a route. The rate index remains the source of truth, but the
      * featured cards should never make someone scroll back to compare price. */
-    const featuredPrice = el('p', 'featured-service__price', displayPrice(service));
-    featuredPrice.setAttribute('aria-label', 'Starting rate ' + displayPrice(service));
+    const featuredPriceText = displayPrice(service);
+    const featuredPrice = el('p', 'featured-service__price', featuredPriceText);
+    featuredPrice.setAttribute('aria-label', 'Starting rate ' + featuredPriceText);
     article.appendChild(featuredPrice);
 
     const footer = el('div', 'featured-service__footer featured-service__actions');
