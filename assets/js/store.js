@@ -11,9 +11,12 @@
 (function () {
   'use strict';
 
+  document.documentElement.classList.remove('no-js');
+
   const cfg = window.SITE_CONFIG || {
     email: '',
     social: [],
+    pricing: { public: false, quoteLabel: 'Written quote after listening' },
     checkout: { enabled: false, enquiryFallback: true },
     currencySymbol: '€'
   };
@@ -38,13 +41,87 @@
     return symbol + (n % 1 === 0 ? String(n) : n.toFixed(2));
   }
 
+  function publicPricingEnabled() {
+    return !!(cfg.pricing && cfg.pricing.public === true);
+  }
+
+  function quoteLabel() {
+    return (cfg.pricing && cfg.pricing.quoteLabel) || 'Written quote after listening';
+  }
+
+  function displayPrice(service) {
+    if (
+      !publicPricingEnabled() ||
+      service.needsQuote === true ||
+      !Number.isFinite(service.price) ||
+      service.price <= 0
+    ) return quoteLabel();
+    return formatPrice(service.price) + (service.priceNote ? ' ' + service.priceNote : '');
+  }
+
   const CATEGORY_LABEL = { mastering: 'Mastering', mixing: 'Mixing' };
+
+  /* The short rate index answers the first practical question without making
+   * visitors navigate the full service catalogue. Keep this list deliberately
+   * small; the detailed menu remains the source of truth for scope. */
   const QUICK_RATE_IDS = [
     'mastering-single',
     'mixing-single',
     'mixing-mastering-bundle',
     'mastering-stem',
   ];
+
+  function rateText(service) {
+    if (
+      !publicPricingEnabled() ||
+      service.needsQuote === true ||
+      !Number.isFinite(service.price) ||
+      service.price <= 0
+    ) return quoteLabel();
+    return formatPrice(service.price) + (service.priceNote ? ' ' + service.priceNote : '');
+  }
+
+  function buildRateItem(service, linkPrefix) {
+    const item = el('li', 'rate-quickview__item');
+    const link = el('a');
+    link.href = (linkPrefix ? linkPrefix + '#' : '#') + service.id;
+    const price = rateText(service);
+
+    const copy = el('span', 'rate-quickview__copy');
+    copy.appendChild(el('span', 'rate-quickview__category', CATEGORY_LABEL[service.category] || service.category));
+    copy.appendChild(el('strong', null, service.title));
+    link.appendChild(copy);
+    link.appendChild(el('span', 'rate-quickview__price', price));
+    link.appendChild(el('span', 'rate-quickview__subtitle', service.subtitle || service.priceNote || ''));
+    item.appendChild(link);
+    return item;
+  }
+
+  function renderRateIndex() {
+    const list = document.getElementById('rate-quickview');
+    if (!list) return;
+    const linkPrefix = list.dataset.linkPrefix || '';
+    list.innerHTML = '';
+    QUICK_RATE_IDS.forEach(function (id) {
+      const service = services.find(function (item) { return item.id === id; });
+      if (service && service.available !== false) list.appendChild(buildRateItem(service, linkPrefix));
+    });
+  }
+
+  function renderRateFrom() {
+    const service = services.find(function (item) { return item.id === 'mastering-single'; });
+    const text = service && publicPricingEnabled() && Number.isFinite(service.price) && service.price > 0
+      ? formatPrice(service.price)
+      : quoteLabel();
+    document.querySelectorAll('[data-rate-from]').forEach(function (node) {
+      node.textContent = text;
+      const parent = node.closest('a');
+      if (parent) parent.setAttribute('aria-label', 'Rates from ' + text + ' per track — view rates');
+    });
+  }
+
+  renderRateIndex();
+  renderRateFrom();
 
   function mailtoHref(subject, body) {
     const address = cfg.email || '';
@@ -55,91 +132,25 @@
   }
 
   function enquiryBody(service) {
-    const rate = service.needsQuote === true
-      ? 'On request'
-      : formatPrice(service.price) + (service.priceNote ? ' ' + service.priceNote : '');
     return [
       'Hi Gabriel,',
       '',
       'I am interested in: ' + service.title,
-      'Displayed rate: ' + rate,
+      'I understand this is a non-binding enquiry.',
       '',
-      'Artist / project name:',
-      'Rough mix or private link:',
-      'Reference tracks:',
+      'Private listening link:',
+      'What still feels unresolved:',
       'Release deadline:',
+      'Reference tracks:',
+      '',
+      'Optional context',
+      'Artist / project name:',
       'Number of tracks / stems:',
-      'Anything specific you want help with:',
+      'Release format and required delivery versions:',
       '',
       'Thanks,'
     ].join('\n');
   }
-
-  /* ---------------------------------------------------------------------
-   * Rate index
-   * ------------------------------------------------------------------- */
-
-  function renderRateIndex() {
-    const lists = Array.prototype.slice.call(document.querySelectorAll('.rate-quickview'));
-    if (!lists.length) return;
-
-    const quickRates = QUICK_RATE_IDS
-      .map(function (id) {
-        return services.filter(function (service) { return service.id === id; })[0];
-      })
-      .filter(function (service) {
-        return service && service.available !== false;
-      });
-
-    lists.forEach(function (list) {
-      const prefix = list.dataset.linkPrefix || '';
-      list.innerHTML = '';
-
-      quickRates.forEach(function (service) {
-        const li = el('li');
-        const href = (prefix ? prefix + '#' : '#') + service.id;
-        const rate = service.needsQuote === true
-          ? 'On request'
-          : formatPrice(service.price) + (service.priceNote ? ' ' + service.priceNote : '');
-        const link = el('a', 'rate-quickview__item');
-        link.href = href;
-        link.setAttribute('aria-label', 'View ' + service.title + ' — ' + rate);
-
-        const copy = el('span', 'rate-quickview__copy');
-        copy.appendChild(el('span', 'rate-quickview__category', CATEGORY_LABEL[service.category] || service.category));
-        copy.appendChild(el('span', 'rate-quickview__title', service.title));
-
-        const price = el('strong', 'rate-quickview__price', rate);
-        link.appendChild(copy);
-        link.appendChild(price);
-        if (service.subtitle) link.appendChild(el('small', 'rate-quickview__subtitle', service.subtitle));
-        li.appendChild(link);
-        list.appendChild(li);
-      });
-    });
-  }
-
-  function renderRateFrom() {
-    const nodes = Array.prototype.slice.call(document.querySelectorAll('[data-rate-from]'));
-    if (!nodes.length) return;
-
-    const first = services.filter(function (service) {
-      return service.id === 'mastering-single' && service.available !== false && service.needsQuote !== true;
-    })[0] || services.filter(function (service) {
-      return service.available !== false && service.needsQuote !== true && Number(service.price) > 0;
-    })[0];
-
-    if (!first) return;
-    const rate = formatPrice(first.price);
-    nodes.forEach(function (node) { node.textContent = rate; });
-    nodes.forEach(function (node) {
-      const link = node.closest('a');
-      if (link) link.setAttribute('aria-label', 'View rates, starting from ' + rate + ' ' + (first.priceNote || ''));
-    });
-  }
-
-  renderRateIndex();
-  renderRateFrom();
 
   function safeExternalUrl(value) {
     if (typeof value !== 'string' || !value.trim()) return null;
@@ -152,6 +163,57 @@
   }
 
   /* ---------------------------------------------------------------------
+   * Three featured routes — same source data as the full catalogue
+   * ------------------------------------------------------------------- */
+
+  const FEATURED_SERVICE_IDS = [
+    'mastering-single',
+    'mixing-single',
+    'mixing-mastering-bundle'
+  ];
+
+  function buildFeaturedCard(service, index) {
+    const article = el('article', 'featured-service');
+    article.appendChild(el('p', 'featured-service__number', String(index + 1).padStart(2, '0')));
+    article.appendChild(el('h3', null, service.title));
+    article.appendChild(el('p', 'featured-service__desc', service.description));
+
+    const meta = el('div', 'featured-service__meta');
+    meta.setAttribute(
+      'aria-label',
+      'Typical timing: ' + service.turnaround + '. Revision scope: ' + service.revisions
+    );
+    meta.appendChild(el('span', null, service.turnaround));
+    meta.appendChild(el('span', null, service.revisions));
+    article.appendChild(meta);
+
+    const footer = el('div', 'featured-service__footer featured-service__actions');
+
+    const enquiry = el('a', 'featured-service__enquiry', 'Let me hear this');
+    enquiry.href = mailtoHref(
+      'Non-binding project enquiry — ' + service.title,
+      enquiryBody(service)
+    ) || 'brief.html';
+    enquiry.setAttribute('aria-label', 'Let me hear this — start a non-binding enquiry about ' + service.title);
+    footer.appendChild(enquiry);
+
+    const detail = el('a', 'featured-service__link', 'Full scope');
+    detail.href = '#' + service.id;
+    detail.setAttribute('aria-label', 'Full scope — view detailed scope for ' + service.title);
+    footer.appendChild(detail);
+    article.appendChild(footer);
+    return article;
+  }
+
+  const featuredGrid = document.getElementById('featured-service-grid');
+  if (featuredGrid) {
+    FEATURED_SERVICE_IDS.forEach(function (id, index) {
+      const service = services.find(function (item) { return item.id === id; });
+      if (service) featuredGrid.appendChild(buildFeaturedCard(service, index));
+    });
+  }
+
+  /* ---------------------------------------------------------------------
    * Service card
    * ------------------------------------------------------------------- */
 
@@ -160,8 +222,6 @@
     const status = quoteOnly
       ? { enabled: false, label: '', provider: null, providerLabel: null, reason: null }
       : window.Checkout.status(service);
-
-    const bookable = quoteOnly || status.enabled;
 
     const card = el('article', 'card' + (service.available === false ? ' card--unavailable' : ''));
     card.dataset.category = service.category;
@@ -205,9 +265,9 @@
     const foot = el('div', 'card__foot');
 
     const priceWrap = el('div', 'card__pricing');
-    if (quoteOnly) {
-      priceWrap.appendChild(el('span', 'card__price', 'On request'));
-      priceWrap.setAttribute('aria-label', 'Price on request');
+    if (!publicPricingEnabled() || quoteOnly) {
+      priceWrap.appendChild(el('span', 'card__price card__price--quote', quoteLabel()));
+      priceWrap.setAttribute('aria-label', quoteLabel());
     } else {
       priceWrap.appendChild(el('span', 'card__price', formatPrice(service.price)));
       if (service.priceNote) priceWrap.appendChild(el('span', 'card__price-note', service.priceNote));
@@ -224,24 +284,23 @@
       const closed = el('span', 'card__closed', 'Currently full');
       foot.appendChild(closed);
     } else if (quoteOnly) {
-      /* No fixed price — send them to email instead of a checkout. */
-      const href = mailtoHref('Quote request — ' + service.title, enquiryBody(service));
-      const a = el('a', 'btn btn--buy', 'Enquire');
+      /* Individually scoped work starts with a non-binding email enquiry. */
+      const href = mailtoHref('Non-binding quote request — ' + service.title, enquiryBody(service));
+      const a = el('a', 'btn btn--buy', 'Request quote');
       if (href) {
         a.href = href;
       } else {
         a.href = '#contact';
         a.title = 'Set SITE_CONFIG.email in config.js to open email directly.';
       }
-      a.setAttribute('aria-label', 'Enquire about ' + service.title);
+      a.setAttribute('aria-label', 'Request a quote for ' + service.title);
       foot.appendChild(a);
     } else if (!status.enabled && cfg.checkout && cfg.checkout.enquiryFallback === true) {
-      /* Keep the confirmed rate visible and open a service-specific email.
-       * This avoids dead controls without inventing or reusing payment URLs. */
-      const href = mailtoHref('Service enquiry — ' + service.title, enquiryBody(service));
-      const a = el('a', 'btn btn--buy', 'Enquire');
+      /* Keep the route useful while public pricing and payment stay disabled. */
+      const href = mailtoHref('Non-binding service enquiry — ' + service.title, enquiryBody(service));
+      const a = el('a', 'btn btn--buy', 'Request quote');
       a.href = href || '#contact';
-      a.setAttribute('aria-label', 'Enquire about ' + service.title);
+      a.setAttribute('aria-label', 'Request a quote for ' + service.title);
       if (!href) a.title = 'Set SITE_CONFIG.email in config.js to open email directly.';
       foot.appendChild(a);
     } else {
@@ -351,6 +410,9 @@
 
     if (currentFilter !== 'all' && currentFilter !== service.category) setFilter('all');
 
+    const disclosure = grid.closest('details');
+    if (disclosure && !disclosure.open) disclosure.open = true;
+
     const card = grid.querySelector('[data-id="' + cssEscape(id) + '"]');
     if (!card) return false;
 
@@ -382,7 +444,7 @@
   if (emailBtn) {
     const address = cfg.email || '';
     const unset = !address || address.indexOf('REPLACE_ME') === 0;
-    emailBtn.href = unset ? '#' : mailtoHref('Mixing / mastering enquiry');
+    emailBtn.href = unset ? '#' : mailtoHref('Non-binding project enquiry — mixing / mastering');
     emailBtn.textContent = unset ? 'Email — set address in config.js' : address;
     if (unset) emailBtn.classList.add('is-placeholder');
   }
@@ -444,7 +506,19 @@
 
     nav.querySelectorAll('a').forEach(function (a) {
       a.addEventListener('click', function () {
+        const hash = a.hash;
+        const samePage = hash && a.origin === window.location.origin && a.pathname === window.location.pathname;
         setNavOpen(false);
+        if (samePage && mobileNav.matches) {
+          window.setTimeout(function () {
+            const target = document.querySelector(hash);
+            if (!target) return;
+            if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+            target.focus({ preventScroll: true });
+          }, 0);
+        } else if (mobileNav.matches) {
+          toggle.focus();
+        }
       });
     });
 
@@ -456,6 +530,19 @@
 
     if (typeof mobileNav.addEventListener === 'function') {
       mobileNav.addEventListener('change', function () { setNavOpen(false); });
+    }
+
+    const header = toggle.closest('.site-header');
+    if (header) {
+      header.addEventListener('focusout', function () {
+        window.setTimeout(function () {
+          if (
+            mobileNav.matches &&
+            toggle.getAttribute('aria-expanded') === 'true' &&
+            !header.contains(document.activeElement)
+          ) setNavOpen(false);
+        }, 0);
+      });
     }
     setNavOpen(false);
   }
@@ -471,13 +558,17 @@
   if (!cfg.email || cfg.email.indexOf('REPLACE_ME') === 0) {
     console.info('[site] SITE_CONFIG.email is still the placeholder — Enquire buttons cannot open email.');
   }
-  const bookable = services.filter(function (s) {
-    return s.needsQuote === true || (window.Checkout && window.Checkout.status(s).enabled);
+  const reachable = services.filter(function (s) {
+    return s.available !== false && (
+      s.needsQuote === true ||
+      (cfg.checkout && cfg.checkout.enquiryFallback === true) ||
+      (window.Checkout && window.Checkout.status(s).enabled)
+    );
   });
-  if (services.length && !bookable.length) {
+  if (services.length && !reachable.length) {
     console.info(
-      '[site] Nothing is bookable. Each service needs a checkout URL ' +
-      '(checkout.stripeLink or checkout.gumroadUrl), or needsQuote: true.'
+      '[site] No service enquiry route is available. Enable the enquiry ' +
+      'fallback or add a deliberate service route before publishing.'
     );
   }
 })();

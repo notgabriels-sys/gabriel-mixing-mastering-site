@@ -13,15 +13,24 @@ const SITE_CONFIG = {
   // add more freely. `url: null` hides the entry.
   social: [
     {
-      label: 'Hear samples & book on AirGigs',
+      label: 'Hear public examples on AirGigs',
       url: 'https://www.airgigs.com/mastering-engineers-for-hire/109633/I-will-master-your-electronic-music-for-release',
     },
   ],
 
   currency: 'EUR',
   currencySymbol: '€',
+  pricing: {
+    // These are public starting rates, not an automatic booking or final quote.
+    // The written enquiry confirms scope, timing, versions and any unusual
+    // format before work begins.
+    public: true,
+    quoteLabel: 'Written quote after listening',
+  },
   checkout: {
-    enabled: true,
+    // Direct projects begin with a non-binding enquiry and a written quote.
+    // AirGigs remains a separate external marketplace route.
+    enabled: false,
     enquiryFallback: true,
     prefer: 'paypal',
     serverSideStripe: false,
