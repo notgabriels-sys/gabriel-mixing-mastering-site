@@ -1,23 +1,24 @@
 /* ============================================================================
- * styles.css — dark / minimal / industrial
+ * styles.css — graphite / violet / industrial
  * ============================================================================
- * Design intent: near-black ground, one restrained accent, compact metadata
- * against a familiar sans for the words people need to read, hairline borders
- * instead of shadows, no gradients or glow. Everything is driven by the custom
- * properties in :root — change those to reskin the whole site.
+ * Design intent: graphite ground, a restrained violet-neon signal, compact
+ * metadata against a familiar sans for the words people need to read, and
+ * hairline borders instead of heavy decoration. Colour marks hierarchy and
+ * interaction; the grey field keeps the page calm. Everything is driven by the
+ * custom properties in :root — change those to reskin the whole site.
  * ==========================================================================*/
 
 :root {
   /* Ground */
-  --bg:          #0a0a0b;
-  --bg-raised:   #0f0f11;
-  --bg-sunken:   #070708;
-  /* Graphite carries the large fields; the yellow-green is a signal, not a
-   * background paint. Keep accent coverage intentionally sparse. */
-  --bg-tint:     #111214;
-  --bg-tint-deep:#090a0b;
-  --bg-lower:    #070809;
-  --bg-lower-raised: #0b0c0e;
+  --bg:          #0b0b10;
+  --bg-raised:   #15141b;
+  --bg-sunken:   #08080c;
+  /* Graphite carries the large fields; violet is a signal, not a background
+   * paint. Keep accent coverage intentionally sparse. */
+  --bg-tint:     #12111a;
+  --bg-tint-deep:#09090f;
+  --bg-lower:    #08080d;
+  --bg-lower-raised: #0d0d14;
 
   /* Ink.
    * Every value here clears WCAG AA (4.5:1) against the darkest background it
@@ -29,22 +30,23 @@
    * carries product specs and licence terms, so it has to be readable.
    * If you darken these, re-measure. Small mono type on near-black is exactly
    * where contrast quietly stops working. */
-  --fg:          #e8e8ea;
-  --fg-muted:    #8b8b93;
-  --fg-faint:    #7e7e86;
+  --fg:          #eeeaf5;
+  --fg-muted:    #aaa5b5;
+  --fg-faint:    #8d8799;
 
   /* Lines */
-  --line:        #1d1d21;
-  --line-strong: #2c2c33;
-  --line-tint:   #2b2d31;
+  --line:        #272431;
+  --line-strong: #40384d;
+  --line-tint:   #554766;
 
-  /* Accent — a single cold signal colour. Change this one value to reskin. */
-  --accent:      #b8c475;
-  /* Earlier signal yellow: brighter than the lichen root accent, but less
-   * red-heavy and less synthetic than the recent neon test. */
-  --accent-neon: #c8ff2e;
-  --accent-ink:  #0a0b0c;
-  --accent-soft: #191a1d;
+  /* Accent — a restrained violet-neon signal, used for action and focus. */
+  --accent:      #bf91ff;
+  --accent-neon: #d8baff;
+  --accent-ink:  #100b18;
+  --accent-soft: #332545;
+
+  /* Secondary signal — reserved for small technical/readout details. */
+  --signal:      #8acdf1;
 
   /* Type */
   /* Deliberately explicit: key copy must never fall back to a serif or
@@ -217,7 +219,7 @@ button { font: inherit; }
 
 .logo__location {
   padding-left: 18px;
-  color: var(--fg-faint);
+  color: var(--signal);
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.12em;
@@ -333,7 +335,7 @@ button { font: inherit; }
   font-size: 10px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--fg-faint);
+  color: var(--signal);
 }
 
 .hero__meta dd {
@@ -374,7 +376,7 @@ button { font: inherit; }
   border-color: var(--accent);
   color: var(--accent-ink);
 }
-.btn--primary:hover { background: #c7d58b; border-color: #c7d58b; color: var(--accent-ink); }
+.btn--primary:hover { background: var(--accent-neon); border-color: var(--accent-neon); color: var(--accent-ink); }
 
 .btn--ghost { background: transparent; }
 
@@ -694,7 +696,7 @@ button { font: inherit; }
 
 .link-card:hover {
   border-color: var(--accent);
-  background: #121216;
+  background: var(--accent-soft);
   color: var(--fg);
 }
 
@@ -979,7 +981,7 @@ button { font: inherit; }
   transition: background 0.15s;
 }
 
-.card:hover { background: #131316; }
+.card:hover { background: #1b1822; }
 
 .card--unavailable { opacity: 0.6; }
 
@@ -987,7 +989,7 @@ button { font: inherit; }
 .card--focused {
   outline: 1px solid var(--accent);
   outline-offset: -1px;
-  background: #131316;
+  background: var(--accent-soft);
 }
 
 .card__body {
