@@ -358,7 +358,15 @@
       // `inert` prevents the collapsed links entering keyboard focus order;
       // CSS visibility below is the fallback for older browsers.
       nav.toggleAttribute('inert', mobile && !nextOpen);
-      if (returnFocus) toggle.focus();
+      if (returnFocus) {
+        toggle.focus();
+      } else if (nextOpen) {
+        // Put keyboard and screen-reader users inside the menu they just
+        // opened. Keeping focus on the toggle makes the expanded state easy to
+        // miss and makes the next Tab press feel disconnected from the menu.
+        const firstLink = nav.querySelector('a');
+        if (firstLink) firstLink.focus();
+      }
     }
 
     toggle.addEventListener('click', function () {
@@ -367,8 +375,17 @@
 
     nav.querySelectorAll('a').forEach(function (a) {
       a.addEventListener('click', function () {
-        setNavOpen(false);
+        // Do not leave focus on a link inside a menu that has just become
+        // hidden/inert. This also gives same-page links a stable return point.
+        setNavOpen(false, true);
       });
+    });
+
+    document.addEventListener('focusin', function (event) {
+      if (mobileNav.matches && toggle.getAttribute('aria-expanded') === 'true') {
+        const insideMenu = nav.contains(event.target) || event.target === toggle;
+        if (!insideMenu) setNavOpen(false);
+      }
     });
 
     document.addEventListener('keydown', function (event) {
