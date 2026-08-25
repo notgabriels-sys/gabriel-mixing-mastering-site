@@ -40,7 +40,9 @@
   --accent-soft: #151d0d;
 
   /* Type */
-  --font-sans: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  /* Deliberately explicit: key copy must never fall back to a serif or
+   * old-style face when the site is viewed in an embedded browser. */
+  --font-sans: Arial, Helvetica, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
 
   /* Rhythm */
@@ -68,6 +70,7 @@ body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-sans);
+  font-style: normal;
   font-size: 16px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
@@ -287,6 +290,8 @@ button { font: inherit; }
 
 .hero__title {
   margin: 0;
+  font-family: var(--font-sans);
+  font-style: normal;
   font-size: clamp(40px, 8vw, 84px);
   line-height: 0.98;
   letter-spacing: -0.045em;
@@ -509,6 +514,8 @@ button { font: inherit; }
 
 .rate-quickview__copy strong {
   min-width: 0;
+  font-family: var(--font-sans);
+  font-style: normal;
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.025em;
@@ -520,6 +527,7 @@ button { font: inherit; }
   align-self: center;
   color: var(--accent);
   font-family: var(--font-sans);
+  font-style: normal;
   font-size: clamp(19px, 1.8vw, 25px);
   font-weight: 700;
   letter-spacing: -0.04em;
