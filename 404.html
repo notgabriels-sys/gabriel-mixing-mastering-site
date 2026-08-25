@@ -4,14 +4,15 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Not found — Gabriel Garcia Alonso</title>
+  <meta name="theme-color" content="#0f1011" />
   <meta name="robots" content="noindex" />
-  <link rel="icon" href="/public/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="/assets/css/styles.css?v=20260825s" />
+  <link rel="icon" href="public/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260825c" />
 </head>
 <body>
   <!--
-    Cloudflare Workers Static Assets serves /404.html for unknown paths because
-    wrangler.jsonc sets not_found_handling to "404-page".
+    Netlify, Vercel, Cloudflare Pages and GitHub Pages all serve /404.html
+    automatically for unknown paths. No configuration needed.
 
     Unlike every other page here, this one uses paths absolute from the site
     root (/assets/…). A 404 is served for arbitrary URLs — /a/b/c/typo — and
@@ -24,9 +25,9 @@
     <h1>Not found</h1>
     <p>
       That page doesn't exist — most likely a mistyped or outdated link.
-      The full service overview is on the main page.
+      Everything for sale lives on one page.
     </p>
-    <a class="btn btn--primary" href="/index.html#services">Back to services</a>
+    <a class="btn btn--primary" href="index.html#services">Back to services</a>
   </main>
 </body>
 </html>

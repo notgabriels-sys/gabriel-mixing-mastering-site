@@ -3,24 +3,43 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Project enquiry — Gabriel Garcia Alonso</title>
+  <title>Booked — Gabriel Garcia Alonso</title>
+  <meta name="theme-color" content="#0f1011" />
   <meta name="robots" content="noindex" />
-  <link rel="icon" href="/public/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="/assets/css/styles.css?v=20260825s" />
+  <link rel="icon" href="public/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260825c" />
 </head>
 <body>
+  <!--
+    Clients land here after paying.
+
+    IMPORTANT — this differs from a shop. Payment does NOT complete the job:
+    the client still has to send audio. That is why this page leads with the
+    file handoff rather than a thank-you. Keep step 03 of "How it works" in
+    index.html and this page saying the same thing.
+
+    This page is cosmetic and is NOT proof of payment — anyone can open the
+    URL directly. The receipt comes from the payment provider.
+  -->
   <main class="status">
-    <h1>Tell me about your project</h1>
+    <h1>Booked</h1>
     <p>
-      Share a private listening link, the service you are considering, your
-      deadline, and what still feels unresolved.
+      Your slot is reserved and a receipt is on its way from the payment
+      provider.
     </p>
     <p class="status__next">
-      <strong>Start with a private listening link.</strong><br />
-      Full-resolution files are only needed after the scope, timing, and price
-      have been agreed in writing.
+      <strong>Next step — send your files.</strong><br />
+      Reply to your payment receipt with a download link — WeTransfer, Dropbox,
+      Drive, whatever you already use. That keeps the booking and the audio on
+      the same email thread.
     </p>
-    <a class="btn btn--primary" href="/brief.html">Open project brief</a>
+    <p>
+      Mixes as 24-bit WAV with headroom and no limiter on the master bus;
+      stems all starting at the same point. Include references, your deadline,
+      and any element that must stay intact — groove, melody, vocal or texture.
+      Use the transfer method you already work with.
+    </p>
+    <a class="btn btn--primary" href="index.html">Back to the site</a>
   </main>
 </body>
 </html>

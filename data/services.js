@@ -7,14 +7,17 @@
  * file would need fetch(), which browsers block on file:// URLs).
  *
  * ############################################################################
- * # PUBLIC CATALOGUE — PRICES BELOW ARE THE CURRENT PUBLIC STARTING RATES.   #
+ * # PRICES: CONFIRMED BY GABRIEL. TURNAROUNDS AND REVISIONS TOO.             #
  * #                                                                          #
- * # Keep them synchronized with the actual quote you are prepared to honor. #
- * # A visible rate is still a starting point: the written enquiry confirms  #
- * # scope, delivery versions, timing and any unusual format before work.     #
+ * # These are the live rates. Two consequences worth keeping in mind:        #
+ * #   - Whatever is set here must MATCH the amount on the hosted checkout.   #
+ * #     product. The site only displays a number; the provider charges one.  #
+ * #   - The turnarounds are a promise to the client. Change them here if the #
+ * #     books get full rather than quietly missing them.                     #
  * #                                                                          #
- * # Turnarounds and revision scopes are public expectations. Keep those     #
- * # conservative and update them when availability changes.                 #
+ * # UPDATED 2026-08-23: rates were repositioned for the Berlin specialist   #
+ * # market. All old payment links were cleared because their amounts no     #
+ * # longer match. Every service remains open through email enquiry.         #
  * ############################################################################
  *
  * ---------------------------------------------------------------------------
@@ -26,10 +29,14 @@
  *  title        string   Service name as displayed.
  *  subtitle     string   One short line under the title. Optional, may be ''.
  *  description  string   1–2 sentences. What the client actually gets.
- *  price        number   Current public starting rate in the configured
- *                        currency. Use null only for needsQuote services.
+ *  price        number   Amount in MAJOR units (e.g. 60 means €60.00).
+ *                        DISPLAY ONLY — the amount actually charged is the one
+ *                        set on the hosted provider. Keep them in sync
+ *                        by hand; no script can check it, because only the
+ *                        payment provider knows the real price.
  *  priceNote    string   Unit the price is per — 'per track', 'flat', 'from'.
- *                        Reserved for a future reviewed public-price launch.
+ *                        Shown next to the price. Services are ambiguous
+ *                        without it, so this is effectively required.
  *  turnaround   string   Typical delivery time, e.g. '3–5 working days'.
  *                        Be conservative; it sets an expectation you have to
  *                        meet, and a missed one costs more than a slow quote.
@@ -39,8 +46,9 @@
  *                        that opens email instead of checkout. Use for album
  *                        work, unusual formats, anything you'd want to hear
  *                        before pricing.
- *  enquiryOnly  boolean  true = the action remains an email enquiry because
- *                        the service needs file/scope confirmation.
+ *  enquiryOnly  boolean  true = the fixed price stays visible, but the action
+ *                        remains an email enquiry because the service needs
+ *                        file/scope confirmation before direct checkout.
  *  available    boolean  false greys the card out and shows "Currently full".
  *                        Use it when the books are closed rather than deleting
  *                        the service — keeps the page honest without losing
@@ -61,11 +69,8 @@
  * TO ADD OR CHANGE A SERVICE
  * ---------------------------------------------------------------------------
  *  1. Edit or copy an entry below. Give it a unique `id`.
- *  2. Set the public turnaround, revisions and includes.
- *  3. Update the displayed public rate here and the private working-rate
- *     reference together when a rate changes.
- *  4. If direct checkout is later approved, create the matching product with
- *     the selected payment provider and verify its public detail page:
+ *  2. Set the real price, turnaround, revisions and includes.
+ *  3. Create the matching product with your payment provider:
  *       Stripe   Dashboard -> Product catalogue -> Add product -> set name
  *                and price -> Create payment link -> copy URL ->
  *                `checkout.stripeLink`
@@ -74,8 +79,8 @@
  *       PayPal   Create a no-code checkout/payment link -> verify its public
  *                detail page -> `checkout.paypalUrl`
  *     No API key is involved; these hosted checkout URLs are public by design.
- *  5. Or set `needsQuote: true` and skip the payment provider entirely.
- *  6. Run `node scripts/check.js`.
+ *  4. Or set `needsQuote: true` and skip the payment provider entirely.
+ *  5. Run `node scripts/check.js`.
  *
  * NOTE ON SELLING SERVICES RATHER THAN FILES
  * A payment link takes the money but cannot collect the audio. The client
@@ -98,8 +103,9 @@ const SERVICES = [
     title: 'Single Track Mastering',
     subtitle: 'One track, release-ready',
     description:
-      'A finished mix shaped for the agreed release formats while preserving ' +
-      'the character and intent already in the record.',
+      'Mastering for one finished mix, keeping the groove, low-end relationship ' +
+      'and melodic space intact. Delivered ready for digital release, with a ' +
+      'separate club/DJ cut if you want one.',
     price: 45,
     priceNote: 'per track',
     turnaround: '3–5 working days',
@@ -114,7 +120,7 @@ const SERVICES = [
     available: true,
     checkout: {
       stripeLink: null,
-      paypalUrl: null,
+      paypalUrl: 'https://www.paypal.com/ncp/payment/3SWZ64EXW9C8W',
       stripePriceId: null,
       gumroadUrl: null,
       lemonSqueezyUrl: null,
@@ -127,8 +133,8 @@ const SERVICES = [
     title: 'EP Mastering',
     subtitle: 'Up to 4 tracks, levelled as a set',
     description:
-      'Mastering for a short release, balanced so the tracks sit together as ' +
-      'one record rather than as separate singles.',
+      'Mastering for a short release, balanced so groove-led tracks sit together ' +
+      'as one record rather than as separate singles.',
     price: 240,
     priceNote: 'up to 4 tracks',
     turnaround: '5–7 working days',
@@ -157,8 +163,9 @@ const SERVICES = [
     title: 'Stem Mastering',
     subtitle: 'From grouped stems, not a stereo mix',
     description:
-      'For mixes that need more control than a stereo master allows. Send ' +
-      'grouped stems and the balance can still be moved at the master stage.',
+      'For mixes that need more control than a stereo master allows. Send grouped ' +
+      'stems so kick, bass, transients and the overall balance can still be moved ' +
+      'at the master stage.',
     price: 120,
     priceNote: 'per track',
     turnaround: '5–7 working days',
@@ -185,7 +192,7 @@ const SERVICES = [
     id: 'mastering-vinyl',
     category: 'mastering',
     title: 'Vinyl Pre-Master',
-    subtitle: 'Prepared to the cutting engineer’s requirements, per side',
+    subtitle: 'Cut-ready, per side',
     description:
       'A separate master prepared for lacquer cutting — different constraints ' +
       'from a digital master, so it is done as its own pass.',
@@ -194,7 +201,7 @@ const SERVICES = [
     turnaround: '5–7 working days',
     revisions: '1 revision pass included',
     includes: [
-      'WAV prepared to the agreed cutting requirements',
+      'Cut-ready WAV per side',
       'Side timings and track spacing',
       'Notes for the cutting engineer',
     ],
@@ -216,9 +223,9 @@ const SERVICES = [
     title: 'Album Mastering',
     subtitle: 'Priced per record',
     description:
-      'Full-length releases are quoted individually — track count, formats ' +
-      'and deadline all move the number. Send the record and what you need.',
-    price: null,
+      'Full-length releases are quoted individually — track count, formats, the ' +
+      'record arc and deadline all move the number. Send the record and what you need.',
+    price: 0,
     priceNote: '',
     turnaround: 'Agreed per project',
     revisions: 'Agreed per project',
@@ -246,8 +253,9 @@ const SERVICES = [
     title: 'Track Mixing',
     subtitle: 'One track, from your session',
     description:
-      'Clarity, movement and low-end hierarchy from your multitrack session ' +
-      'or stems, shaped into a coherent final mix.',
+      'Mixing one track from your multitrack session or stems, with attention to ' +
+      'groove, kick/bass space, movement and melodic detail, through to a mix ' +
+      'that is ready to be mastered.',
     price: 160,
     priceNote: 'per track',
     turnaround: '7–10 working days',
@@ -262,7 +270,7 @@ const SERVICES = [
     available: true,
     checkout: {
       stripeLink: null,
-      paypalUrl: null,
+      paypalUrl: 'https://www.paypal.com/ncp/payment/6Z93DNS76PCGS',
       stripePriceId: null,
       gumroadUrl: null,
       lemonSqueezyUrl: null,
@@ -275,8 +283,8 @@ const SERVICES = [
     title: 'Mix + Master',
     subtitle: 'One track, start to finish',
     description:
-      'One continuous process from raw session to final master, with every ' +
-      'mix and mastering decision held in context.',
+      'Mixing and mastering handled together on the same track, so the groove and ' +
+      'low-end decisions can be carried consistently from session to final master.',
     price: 190,
     priceNote: 'per track',
     turnaround: '7–12 working days',
@@ -291,7 +299,7 @@ const SERVICES = [
     available: true,
     checkout: {
       stripeLink: null,
-      paypalUrl: null,
+      paypalUrl: 'https://www.paypal.com/ncp/payment/QW8V53WWM2P7E',
       stripePriceId: null,
       gumroadUrl: null,
       lemonSqueezyUrl: null,
@@ -332,8 +340,9 @@ const SERVICES = [
     title: 'Mix Feedback Session',
     subtitle: 'One hour, your mix, notes back',
     description:
-      'A listening pass on a mix you are doing yourself, with written notes ' +
-      'on what to change and why. No files are altered.',
+      'A listening pass on a mix you are doing yourself, with written notes on ' +
+      'what to change and why. Useful when you want to keep your own workflow; ' +
+      'no files are altered.',
     price: 90,
     priceNote: 'per hour',
     turnaround: '2–4 working days',
