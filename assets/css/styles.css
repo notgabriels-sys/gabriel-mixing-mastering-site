@@ -1,9 +1,9 @@
 /* ============================================================================
  * styles.css — dark / minimal / industrial
  * ============================================================================
- * Design intent: near-black ground, one restrained accent, tight monospace
- * labels against a neutral sans for body text, hairline borders instead of
- * shadows, no gradients or glow. Everything is driven by the custom
+ * Design intent: near-black ground, one restrained accent, compact metadata
+ * against a familiar sans for the words people need to read, hairline borders
+ * instead of shadows, no gradients or glow. Everything is driven by the custom
  * properties in :root — change those to reskin the whole site.
  * ==========================================================================*/
 
@@ -12,6 +12,8 @@
   --bg:          #0a0a0b;
   --bg-raised:   #0f0f11;
   --bg-sunken:   #070708;
+  --bg-tint:     #0d110d;
+  --bg-tint-deep:#090d0a;
 
   /* Ink.
    * Every value here clears WCAG AA (4.5:1) against the darkest background it
@@ -30,13 +32,15 @@
   /* Lines */
   --line:        #1d1d21;
   --line-strong: #2c2c33;
+  --line-tint:   #293225;
 
   /* Accent — a single cold signal colour. Change this one value to reskin. */
   --accent:      #c8ff2e;
   --accent-ink:  #0a0a0b;
+  --accent-soft: #151d0d;
 
   /* Type */
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-sans: 'Helvetica Neue', Arial, Helvetica, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
 
   /* Rhythm */
@@ -285,8 +289,8 @@ button { font: inherit; }
   margin: 0;
   font-size: clamp(40px, 8vw, 84px);
   line-height: 0.98;
-  letter-spacing: -0.03em;
-  font-weight: 600;
+  letter-spacing: -0.045em;
+  font-weight: 700;
 }
 
 .hero__lede {
@@ -415,12 +419,12 @@ button { font: inherit; }
 
 .section__title {
   margin: 0;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.22em;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--fg-muted);
-  font-weight: 400;
+  color: var(--fg);
+  font-weight: 700;
 }
 
 .section__label {
@@ -443,7 +447,8 @@ button { font: inherit; }
  * enough to keep the service journey editorial rather than turning into a
  * loud comparison table. */
 .rate-section {
-  background: var(--bg-raised);
+  background: var(--bg-tint);
+  border-top: 1px solid var(--line-tint);
 }
 
 .rate-section__lede {
@@ -459,14 +464,14 @@ button { font: inherit; }
   margin: 26px 0 0;
   padding: 0;
   list-style: none;
-  background: var(--line);
-  border-top: 1px solid var(--line-strong);
+  background: var(--line-tint);
+  border-top: 2px solid var(--accent);
   border-bottom: 1px solid var(--line-strong);
 }
 
 .rate-quickview__item {
   min-width: 0;
-  background: var(--bg-raised);
+  background: var(--bg-tint);
 }
 
 .rate-quickview__item > a {
@@ -476,13 +481,13 @@ button { font: inherit; }
   grid-template-areas: "copy price" "subtitle price";
   gap: 6px 16px;
   align-items: start;
-  min-height: 106px;
-  padding: 18px 20px;
+  min-height: 112px;
+  padding: 20px 22px;
   color: inherit;
 }
 
 .rate-quickview__item > a:hover {
-  background: #131316;
+  background: var(--accent-soft);
   color: var(--fg);
 }
 
@@ -494,18 +499,19 @@ button { font: inherit; }
 }
 
 .rate-quickview__category {
-  color: var(--fg-faint);
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.16em;
+  color: var(--accent);
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
 }
 
 .rate-quickview__copy strong {
   min-width: 0;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
   overflow-wrap: anywhere;
 }
 
@@ -513,16 +519,17 @@ button { font: inherit; }
   grid-area: price;
   align-self: center;
   color: var(--accent);
-  font-family: var(--font-mono);
-  font-size: 17px;
-  letter-spacing: 0.01em;
+  font-family: var(--font-sans);
+  font-size: clamp(19px, 1.8vw, 25px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
   white-space: nowrap;
 }
 
 .rate-quickview__subtitle {
   grid-area: subtitle;
   min-width: 0;
-  color: var(--fg-faint);
+  color: var(--fg-muted);
   font-size: 12px;
   line-height: 1.45;
 }
@@ -530,9 +537,10 @@ button { font: inherit; }
 .hero__rate-line {
   margin: 16px 0 0;
   color: var(--fg-faint);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.1em;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
 }
 
@@ -1271,7 +1279,7 @@ button { font: inherit; }
 }
 
 .home .hero {
-  background: var(--bg-sunken);
+  background: var(--bg-tint-deep);
 }
 
 .home .hero__inner {
@@ -1291,8 +1299,9 @@ button { font: inherit; }
 .home .hero__title {
   max-width: none;
   font-size: clamp(48px, 4.7vw, 72px);
-  line-height: 1;
-  letter-spacing: -0.04em;
+  line-height: 0.96;
+  letter-spacing: -0.05em;
+  font-weight: 700;
 }
 
 .home .hero__title span { display: block; }
@@ -1363,7 +1372,18 @@ button { font: inherit; }
   min-width: 0;
   border-top: 1px solid var(--line-strong);
   border-bottom: 1px solid var(--line-strong);
-  background: transparent;
+  border-left: 1px solid var(--line-tint);
+  background: var(--bg-tint);
+  padding: 0 clamp(18px, 2.6vw, 34px);
+}
+
+.hero--compact {
+  background: var(--bg-tint-deep);
+}
+
+.hero--compact .hero__title {
+  font-weight: 700;
+  letter-spacing: -0.05em;
 }
 
 .listen-panel__head {
@@ -1941,16 +1961,17 @@ button { font: inherit; }
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
     grid-template-areas: "copy" "price" "subtitle";
-    min-height: 116px;
-    padding: 14px 16px 15px;
+    min-height: 122px;
+    padding: 16px 17px 17px;
     gap: 4px;
   }
   .rate-quickview__price {
     justify-self: start;
     align-self: start;
-    font-size: 21px;
+    font-size: 22px;
     line-height: 1.2;
   }
+  .listen-panel { padding-left: 0; padding-right: 0; }
   .section__head { align-items: flex-start; flex-direction: column; }
   .grid { grid-template-columns: 1fr; }
   .filters { flex-wrap: wrap; }
