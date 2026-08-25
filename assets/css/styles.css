@@ -40,7 +40,9 @@
 
   /* Accent — a single cold signal colour. Change this one value to reskin. */
   --accent:      #b8c475;
-  --accent-neon: #d8ff2f;
+  /* Earlier signal yellow: brighter than the lichen root accent, but less
+   * red-heavy and less synthetic than the recent neon test. */
+  --accent-neon: #c8ff2e;
   --accent-ink:  #0a0b0c;
   --accent-soft: #191a1d;
 
