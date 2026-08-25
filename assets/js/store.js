@@ -39,6 +39,12 @@
   }
 
   const CATEGORY_LABEL = { mastering: 'Mastering', mixing: 'Mixing' };
+  const QUICK_RATE_IDS = [
+    'mastering-single',
+    'mixing-single',
+    'mixing-mastering-bundle',
+    'mastering-stem',
+  ];
 
   function mailtoHref(subject, body) {
     const address = cfg.email || '';
@@ -68,6 +74,72 @@
       'Thanks,'
     ].join('\n');
   }
+
+  /* ---------------------------------------------------------------------
+   * Rate index
+   * ------------------------------------------------------------------- */
+
+  function renderRateIndex() {
+    const lists = Array.prototype.slice.call(document.querySelectorAll('.rate-quickview'));
+    if (!lists.length) return;
+
+    const quickRates = QUICK_RATE_IDS
+      .map(function (id) {
+        return services.filter(function (service) { return service.id === id; })[0];
+      })
+      .filter(function (service) {
+        return service && service.available !== false;
+      });
+
+    lists.forEach(function (list) {
+      const prefix = list.dataset.linkPrefix || '';
+      list.innerHTML = '';
+
+      quickRates.forEach(function (service) {
+        const li = el('li');
+        const href = (prefix ? prefix + '#' : '#') + service.id;
+        const rate = service.needsQuote === true
+          ? 'On request'
+          : formatPrice(service.price) + (service.priceNote ? ' ' + service.priceNote : '');
+        const link = el('a', 'rate-quickview__item');
+        link.href = href;
+        link.setAttribute('aria-label', 'View ' + service.title + ' — ' + rate);
+
+        const copy = el('span', 'rate-quickview__copy');
+        copy.appendChild(el('span', 'rate-quickview__category', CATEGORY_LABEL[service.category] || service.category));
+        copy.appendChild(el('span', 'rate-quickview__title', service.title));
+
+        const price = el('strong', 'rate-quickview__price', rate);
+        link.appendChild(copy);
+        link.appendChild(price);
+        if (service.subtitle) link.appendChild(el('small', 'rate-quickview__subtitle', service.subtitle));
+        li.appendChild(link);
+        list.appendChild(li);
+      });
+    });
+  }
+
+  function renderRateFrom() {
+    const nodes = Array.prototype.slice.call(document.querySelectorAll('[data-rate-from]'));
+    if (!nodes.length) return;
+
+    const first = services.filter(function (service) {
+      return service.id === 'mastering-single' && service.available !== false && service.needsQuote !== true;
+    })[0] || services.filter(function (service) {
+      return service.available !== false && service.needsQuote !== true && Number(service.price) > 0;
+    })[0];
+
+    if (!first) return;
+    const rate = formatPrice(first.price);
+    nodes.forEach(function (node) { node.textContent = rate; });
+    nodes.forEach(function (node) {
+      const link = node.closest('a');
+      if (link) link.setAttribute('aria-label', 'View rates, starting from ' + rate + ' ' + (first.priceNote || ''));
+    });
+  }
+
+  renderRateIndex();
+  renderRateFrom();
 
   function safeExternalUrl(value) {
     if (typeof value !== 'string' || !value.trim()) return null;

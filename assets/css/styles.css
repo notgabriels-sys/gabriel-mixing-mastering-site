@@ -311,6 +311,15 @@ button { font: inherit; }
   margin-top: 40px;
 }
 
+.btn__price {
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  text-transform: none;
+}
+
 .hero__meta {
   display: flex;
   flex-wrap: wrap;
@@ -484,11 +493,126 @@ button { font: inherit; }
   transform: rotate(45deg);
 }
 
+.section__label {
+  margin: 14px 0 0;
+  color: var(--fg-faint);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
 .section--split {
   display: grid;
   grid-template-columns: minmax(160px, 220px) 1fr;
   gap: clamp(32px, 6vw, 86px);
   align-items: start;
+}
+
+/* A short price index keeps the first decision visible without turning the
+ * page into a loud pricing table. Rows are generated from services.js so the
+ * displayed starting point and route links cannot drift from the full cards. */
+.rate-section {
+  background: var(--bg-raised);
+}
+
+.rate-section__lede {
+  max-width: 58ch;
+  margin: 0 0 24px;
+  color: var(--fg-muted);
+}
+
+.rate-quickview {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 860px;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line-strong);
+  list-style: none;
+}
+
+.rate-quickview li { min-width: 0; }
+
+.rate-quickview li:nth-child(odd) {
+  border-right: 1px solid var(--line);
+}
+
+.rate-quickview__item {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "copy price"
+    "subtitle price";
+  align-items: center;
+  gap: 18px;
+  min-height: 78px;
+  padding: 14px 30px 14px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--fg);
+}
+
+.rate-quickview__item::after {
+  content: '↗';
+  position: absolute;
+  right: 5px;
+  top: 17px;
+  color: var(--fg-faint);
+  font-size: 14px;
+  transition: color 0.15s, transform 0.15s;
+}
+
+.rate-quickview__item:hover { color: var(--fg); }
+.rate-quickview__item:hover::after {
+  color: var(--accent);
+  transform: translate(2px, -2px);
+}
+
+.rate-quickview__copy {
+  grid-area: copy;
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.rate-quickview__category {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.rate-quickview__title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 15px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.rate-quickview__subtitle {
+  grid-area: subtitle;
+  overflow: hidden;
+  color: var(--fg-faint);
+  font-size: 12px;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rate-quickview__price {
+  grid-area: price;
+  align-self: center;
+  justify-self: end;
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 23px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
 }
 
 .placeholder-tag {
@@ -1331,6 +1455,29 @@ button { font: inherit; }
     border-left: 0;
   }
   .filters { gap: 18px; }
+  .rate-quickview { grid-template-columns: 1fr; }
+  .rate-quickview li:nth-child(odd) { border-right: 0; }
+  .rate-quickview__item {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "copy"
+      "price"
+      "subtitle";
+    align-items: start;
+    gap: 3px;
+    min-height: 102px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+  .rate-quickview__price {
+    align-self: start;
+    justify-self: start;
+    margin-top: 3px;
+    font-size: 22px;
+  }
+  .rate-quickview__title,
+  .rate-quickview__subtitle { white-space: normal; }
 }
 
 /* Touch devices: everything tappable clears the ~44px guideline. Measured at

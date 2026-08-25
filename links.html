@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#0b0b0c" />
   <link rel="canonical" href="https://audio.gabs-utilities.com/links.html" />
   <link rel="icon" href="public/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260825l" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260825m" />
 </head>
 <body>
   <a class="skip-link" href="#links">Skip to links</a>
@@ -19,6 +19,7 @@
       <span class="logo__text">GABRIEL GARCIA ALONSO</span>
     </a>
     <nav class="nav" id="main-nav" aria-label="Main">
+      <a href="index.html#rates">Rates</a>
       <a href="index.html#services">Services</a>
       <a href="index.html#process">Process</a>
       <a href="brief.html">Brief</a>
@@ -39,6 +40,31 @@
         <h1 class="hero__title">A quiet way in</h1>
         <p class="hero__lede">
           Services, booking, brief and contact — kept in one place.
+        </p>
+        <a class="hero__rate-link" href="#rates" aria-label="View rates, starting from 45 euros per track">
+          <span>Rates from</span>
+          <strong data-rate-from>€45</strong>
+          <span>per track <span aria-hidden="true">↘</span></span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section section--split section--compact rate-section" id="rates" aria-labelledby="rates-title">
+      <div>
+        <h2 class="section__title" id="rates-title">Rates</h2>
+        <p class="section__label">Choose your route</p>
+      </div>
+      <div>
+        <p class="rate-section__lede">
+          Start with the closest match. Each line opens the full service card
+          with delivery, revisions and what to send.
+        </p>
+        <ul class="rate-quickview" id="rate-quickview" data-link-prefix="index.html" aria-label="Current service rates"></ul>
+        <noscript>
+          <p class="section__note">Enable JavaScript to see current rates and service details.</p>
+        </noscript>
+        <p class="section__note">
+          <a href="index.html#services">See every service and its full scope</a>
         </p>
       </div>
     </section>
@@ -85,18 +111,6 @@
 
     <section class="section section--split">
       <div>
-        <h2 class="section__title">Core services</h2>
-      </div>
-      <div class="mini-service-list" aria-label="Core service shortcuts">
-        <a href="index.html#mastering-single"><span>Single Track Mastering</span><strong>€45</strong></a>
-        <a href="index.html#mixing-single"><span>Track Mixing</span><strong>€160</strong></a>
-        <a href="index.html#mixing-mastering-bundle"><span>Mix + Master</span><strong>€190</strong></a>
-        <a href="index.html#mix-consult"><span>Mix Feedback Session</span><strong>€90/hour</strong></a>
-      </div>
-    </section>
-
-    <section class="section section--split">
-      <div>
         <h2 class="section__title">What to send</h2>
       </div>
       <div class="prose">
@@ -130,6 +144,7 @@
   </footer>
 
   <script src="config.js?v=20260824g" defer></script>
-  <script src="assets/js/store.js?v=20260824h" defer></script>
+  <script src="data/services.js?v=20260824f" defer></script>
+  <script src="assets/js/store.js?v=20260825a" defer></script>
 </body>
 </html>
