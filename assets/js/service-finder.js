@@ -140,6 +140,7 @@
     form.addEventListener('reset', hint);
     form.setAttribute('data-service-finder-bound', 'true');
     hint();
+    result.hidden = false;
     form.hidden = false;
   }
 

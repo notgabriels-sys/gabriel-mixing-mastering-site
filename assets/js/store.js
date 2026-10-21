@@ -94,6 +94,7 @@
     const card = el('article', 'card' + (service.available === false ? ' card--unavailable' : ''));
     card.dataset.category = service.category;
     card.dataset.id = service.id;
+    card.id = service.id;
     card.tabIndex = -1;
 
     const body = el('div', 'card__body');
@@ -300,6 +301,24 @@
   }
 
   window.addEventListener('hashchange', handleHash);
+  // A filtered-out card has no native anchor target. Following its fragment
+  // again does not emit hashchange, so restore and focus that service here.
+  document.addEventListener('click', function (event) {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey ||
+        event.ctrlKey || event.shiftKey || event.altKey) return;
+    const target = event.target && (event.target.nodeType === 1
+      ? event.target : event.target.parentElement);
+    const link = target && typeof target.closest === 'function'
+      ? target.closest('a[href^="#"]') : null;
+    if (!link || link.getAttribute('href') !== window.location.hash) return;
+    try {
+      if (focusService(decodeURIComponent(window.location.hash.slice(1)))) {
+        event.preventDefault();
+      }
+    } catch (_) {
+      // Leave malformed and non-service fragments to normal navigation.
+    }
+  });
   handleHash();
 
   /* ---------------------------------------------------------------------
