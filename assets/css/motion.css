@@ -1,0 +1,169 @@
+/* ============================================================================
+ * motion.css — ambient motion + light theme for the graphite site
+ * ============================================================================
+ * Shares its motion language with the other gabs-utilities.com pages (slow
+ * drifting glows, faint rings, one pulse, pointer light on cards, a remembered
+ * light/dark switch) but keeps this site's own identity: graphite ground and a
+ * single cold silver signal. No violet, no warm accent.
+ *
+ * Rules:
+ * - Everything that moves sits inside prefers-reduced-motion: no-preference.
+ *   With reduced motion on, the page is the static graphite page it was.
+ * - Decorative layers are aria-hidden and pointer-events: none.
+ * - Colours come from the tokens in styles.css; the light theme below only
+ *   redefines those tokens plus the few literals styles.css hard-codes.
+ * ==========================================================================*/
+
+/* --------------------------------------------------------------------------
+ * Light theme. Dark stays the default; light is chosen by the switch, or by
+ * the OS when the visitor has not chosen. Contrast measured on --bg-raised
+ * (#ffffff): --fg 17.6:1, --fg-muted 7.6:1, --fg-faint 5.7:1.
+ * ------------------------------------------------------------------------*/
+:root { --halo: .55; --glow-a: rgba(201, 207, 214, .10); --glow-b: rgba(160, 164, 171, .08); --ring: rgba(201, 207, 214, .16); --header-bg: rgba(15, 16, 17, .88); }
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --bg: #f2f2f0; --bg-raised: #ffffff; --bg-sunken: #e8e8e6;
+    --fg: #141517; --fg-muted: #4b4f55; --fg-faint: #62666d;
+    --line: #d9dadc; --line-strong: #9a9ea4;
+    --accent: #2b2f35; --accent-dim: #9a9ea4; --accent-ink: #f2f2f0;
+    --halo: .7; --glow-a: rgba(120, 126, 134, .14); --glow-b: rgba(160, 164, 171, .12); --ring: rgba(43, 47, 53, .16); --header-bg: rgba(242, 242, 240, .88);
+  }
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f2f2f0; --bg-raised: #ffffff; --bg-sunken: #e8e8e6;
+  --fg: #141517; --fg-muted: #4b4f55; --fg-faint: #62666d;
+  --line: #d9dadc; --line-strong: #9a9ea4;
+  --accent: #2b2f35; --accent-dim: #9a9ea4; --accent-ink: #f2f2f0;
+  --halo: .7; --glow-a: rgba(120, 126, 134, .14); --glow-b: rgba(160, 164, 171, .12); --ring: rgba(43, 47, 53, .16); --header-bg: rgba(242, 242, 240, .88);
+}
+
+/* Literals styles.css hard-codes, routed through tokens so both themes hold. */
+body { transition: background-color .5s ease, color .5s ease; }
+.site-header { background: var(--header-bg); transition: background-color .5s ease, border-color .5s ease; }
+:root[data-theme="light"] body { background: var(--bg); }
+:root[data-theme="light"] .hero__grid { background: none; }
+:root[data-theme="light"] .btn--primary:hover { background: #41464d; border-color: #41464d; }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) body { background: var(--bg); }
+  :root:not([data-theme="dark"]) .hero__grid { background: none; }
+  :root:not([data-theme="dark"]) .btn--primary:hover { background: #41464d; border-color: #41464d; }
+}
+
+/* --------------------------------------------------------------------------
+ * Ambient field: three soft glows behind everything.
+ * ------------------------------------------------------------------------*/
+.ambient {
+  position: fixed; inset: 0; z-index: -1;
+  pointer-events: none; overflow: hidden;
+  opacity: var(--halo);
+}
+.ambient span {
+  position: absolute; border-radius: 50%;
+  filter: blur(80px);
+  width: 46vmax; height: 46vmax;
+}
+.ambient span:nth-child(1) { left: -14vmax; top: -18vmax; background: radial-gradient(circle, var(--glow-a), transparent 70%); }
+.ambient span:nth-child(2) { right: -18vmax; top: 22vh; background: radial-gradient(circle, var(--glow-b), transparent 70%); }
+.ambient span:nth-child(3) { left: 30vw; bottom: -24vmax; width: 38vmax; height: 38vmax; background: radial-gradient(circle, var(--glow-a), transparent 70%); }
+/* The ambient layer sits behind body content, so body needs its own stacking. */
+body { position: relative; isolation: isolate; }
+
+/* --------------------------------------------------------------------------
+ * Hero object: a lathe-cut disc. Faint grooves, a dashed ring that turns,
+ * a beam that sweeps, one pulse outward like a kick on the one.
+ * ------------------------------------------------------------------------*/
+.hero { position: relative; overflow: hidden; }
+.hero__inner { z-index: 2; }
+.disc {
+  position: absolute; z-index: 1;
+  right: max(-120px, calc((100vw - var(--max)) / 2 - 80px));
+  top: 50%;
+  width: min(560px, 62vw); aspect-ratio: 1;
+  translate: 0 -50%;
+  pointer-events: none;
+  color: var(--ring);
+}
+.disc svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.disc__beam {
+  position: absolute; inset: 9%; border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 0 78%, var(--glow-a) 92%, transparent 100%);
+  -webkit-mask: radial-gradient(circle, transparent 18%, #000 19%, #000 70%, transparent 71%);
+          mask: radial-gradient(circle, transparent 18%, #000 19%, #000 70%, transparent 71%);
+  opacity: 0;
+}
+.disc__pulse { fill: none; stroke: currentColor; stroke-width: 1; opacity: 0; transform-origin: 50% 50%; transform-box: fill-box; }
+.disc__spin { transform-origin: 200px 200px; }
+@media (max-width: 760px) {
+  .disc { width: 120vw; right: -60vw; top: 38%; opacity: .7; }
+}
+
+/* --------------------------------------------------------------------------
+ * Cards and panels: a soft light follows the pointer.
+ * ------------------------------------------------------------------------*/
+.card, .prep-card, .step { position: relative; }
+.card::before, .prep-card::before, .step::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%), var(--glow-a), transparent 65%);
+  opacity: 0; transition: opacity .35s ease;
+}
+.card:hover::before, .prep-card:hover::before, .step:hover::before { opacity: 1; }
+
+/* --------------------------------------------------------------------------
+ * Theme switch: floating pill, bottom right.
+ * ------------------------------------------------------------------------*/
+.theme-switch {
+  position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: max(16px, env(safe-area-inset-bottom, 0px)); z-index: 60;
+  display: inline-flex; align-items: center; gap: 8px;
+  min-height: 44px; padding: 0 16px;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--bg-raised); color: var(--fg-muted);
+  font: 500 11px/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color .5s ease, color .2s ease, border-color .2s ease;
+}
+.theme-switch:hover { color: var(--fg); border-color: var(--line-strong); }
+.theme-switch:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.theme-switch__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+@media print { .theme-switch, .ambient, .disc { display: none; } }
+
+/* --------------------------------------------------------------------------
+ * Motion. Only when the visitor has not asked for less.
+ * ------------------------------------------------------------------------*/
+@media (prefers-reduced-motion: no-preference) {
+  .ambient span:nth-child(1) { animation: drift-a 32s ease-in-out infinite alternate; }
+  .ambient span:nth-child(2) { animation: drift-b 38s ease-in-out infinite alternate; }
+  .ambient span:nth-child(3) { animation: drift-c 26s ease-in-out infinite alternate; }
+
+  .disc svg { animation: float 5s ease-in-out infinite; }
+  .disc__spin { animation: spin 60s linear infinite; }
+  .disc__beam { opacity: 1; animation: spin 9s linear infinite; }
+  .disc__pulse { animation: pulse 3s cubic-bezier(.2, .7, .2, 1) infinite; }
+
+  .card:hover, .prep-card:hover { transform: translateY(-2px); }
+  .card, .prep-card { transition: background .15s ease, transform .35s cubic-bezier(.22, 1, .36, 1); }
+
+  /* Hero copy rises in, 80 ms apart. */
+  .hero__inner > * { animation: rise .7s cubic-bezier(.22, 1, .36, 1) both; }
+  .hero__inner > :nth-child(2) { animation-delay: 80ms; }
+  .hero__inner > :nth-child(3) { animation-delay: 160ms; }
+  .hero__inner > :nth-child(4) { animation-delay: 240ms; }
+  .hero__inner > :nth-child(5) { animation-delay: 320ms; }
+
+  .logo__mark { animation: breathe 6s ease-in-out infinite; }
+}
+
+@keyframes drift-a { to { transform: translate(8vmax, 6vmax) scale(1.08); } }
+@keyframes drift-b { to { transform: translate(-10vmax, -4vmax) scale(.94); } }
+@keyframes drift-c { to { transform: translate(-6vmax, -8vmax) scale(1.1); } }
+@keyframes float { 50% { transform: translateY(-6px); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse {
+  0%   { opacity: .9; transform: scale(.34); }
+  70%  { opacity: 0; }
+  100% { opacity: 0; transform: scale(1); }
+}
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } }
+@keyframes breathe { 50% { width: 34px; } }
